@@ -1,4 +1,4 @@
-import Blank from '../components/Blank.tsx'
+import Blank from '../components/UI/Blank.tsx'
 
 const BlankPage = () => {
     return (
