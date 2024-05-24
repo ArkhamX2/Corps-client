@@ -3,7 +3,7 @@ import Start from '../../components/host/Start.tsx'
 const StartHost = () => {
     return (
         <div>
-            <Start/>
+            <Start />
         </div>
     )
 }

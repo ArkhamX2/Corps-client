@@ -19,6 +19,14 @@ const Navbar: FC<PropsFromRedux> = (props: PropsFromRedux) => {
             startPlayer</Link>
             <Link style={{ margin: '5px', border: '2px solid lightgray', padding: '5px', width: '120px', textAlign: 'center', fontSize: '14px' }} to='/startHost'>
             startHost</Link>
+            <Link style={{ margin: '5px', border: '2px solid lightgray', padding: '5px', width: '120px', textAlign: 'center', fontSize: '14px' }} to='/lobbyPlayer'>
+            lobbyPlayer</Link>
+            <Link style={{ margin: '5px', border: '2px solid lightgray', padding: '5px', width: '120px', textAlign: 'center', fontSize: '14px' }} to='/lobbyHost'>
+            lobbyHost</Link>
+            <Link style={{ margin: '5px', border: '2px solid lightgray', padding: '5px', width: '120px', textAlign: 'center', fontSize: '14px' }} to='/gamePlayer'>
+            gamePlayer</Link>
+            <Link style={{ margin: '5px', border: '2px solid lightgray', padding: '5px', width: '120px', textAlign: 'center', fontSize: '14px' }} to='/gameHost'>
+            gameHost</Link>
         </div>
     )
 }

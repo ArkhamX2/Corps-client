@@ -1,6 +1,7 @@
 import { FC, useEffect } from 'react'
 import { RootState } from '../../store'
 import { ConnectedProps, connect } from 'react-redux'
+import { useNavigate } from 'react-router-dom'
 
 const mapState = (state: RootState) => (
     {
@@ -13,6 +14,12 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 const connector = connect(mapState)
 
 const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
+    const navigate = useNavigate()
+    
+    const ConnectToLobby = () => {
+
+    }
+
     return (
         <div>
             StartPlayer
@@ -22,7 +29,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
             Game:
             <input>
             </input>
-            <button>
+            <button onClick={() => ConnectToLobby()}>
                 Connect to game
             </button>
         </div>
