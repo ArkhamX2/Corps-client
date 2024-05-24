@@ -15,7 +15,16 @@ const connector = connect(mapState)
 const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     return (
         <div>
-            startPlayer
+            StartPlayer
+            Name:
+            <input>
+            </input>
+            Game:
+            <input>
+            </input>
+            <button>
+                Connect to game
+            </button>
         </div>
     )
 }
