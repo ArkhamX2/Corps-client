@@ -1,10 +1,9 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
-const initialState = {Token:"", accountId:0}
+const initialState = {logged:false}
 
 type accountInfo = {
-    token: string
-    accountId: number
+    logged: boolean
 }
 
 const accountSlice = createSlice({
@@ -13,8 +12,7 @@ const accountSlice = createSlice({
     reducers: {
         updateAccountData(state, action: PayloadAction<accountInfo>)
         {
-            state.Token=action.payload.token
-            state.accountId=action.payload.accountId
+            state.logged=action.payload.logged
         }
     },    
     extraReducers: (builder) => {

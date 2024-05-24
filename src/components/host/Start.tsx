@@ -4,10 +4,12 @@ import { ConnectedProps, connect } from 'react-redux'
 import { getToken, setToken } from '../../utility/token'
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
+import { useAppDispatch } from '../../utility/hook';
+import { updateAccountData } from '../../store/accountSlice';
 
 const mapState = (state: RootState) => (
     {
-
+        
     }
 )
 
@@ -16,6 +18,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 const connector = connect(mapState)
 
 const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
+    const dispatch = useAppDispatch()
     const navigate = useNavigate()
 
     const [loginInfo, setLoginInfo] = useState({ login: "", password: "" })
@@ -29,10 +32,12 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     const createLobby = () => {
         if (getToken() != null) {
             console.log("registered")
+            dispatch(updateAccountData({logged: true}))
             navigate('/lobbyHost')
         }
         else {
             console.log("not registered")
+            dispatch(updateAccountData({logged: false}))
             openModal()
         }
     }
