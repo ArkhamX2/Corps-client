@@ -15,13 +15,20 @@ const connector = connect(mapState)
 
 const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     let token = getToken()!
+
     const hubConnection = new signalR.HubConnectionBuilder()
-    .withUrl("https://localhost:7017/game", {accessTokenFactory: () => token.value})
-    .build()
+        .withUrl("https://localhost:7017/game")
+        .build()
+
+    hubConnection.on("CreateSuccess", (id,lobby) => { console.log(id,lobby);  })
+
     useEffect(() => {
         (async () => {
             if (props.logged) {
-                hubConnection.start()
+                await hubConnection.start().catch(err => console.log(err))
+                if (hubConnection.state === signalR.HubConnectionState.Connected) {
+                    hubConnection.invoke("CreateLobby").catch(err => console.log(err))
+                }
             }
         })()
     }, [])
@@ -29,6 +36,7 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     return (
         <div>
             LobbyHost
+            
         </div>
     )
 }
