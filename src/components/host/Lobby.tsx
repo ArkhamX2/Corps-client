@@ -14,13 +14,13 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 const connector = connect(mapState)
 
 const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
-    let token = getToken()!
 
     const hubConnection = new signalR.HubConnectionBuilder()
-        .withUrl("https://localhost:7017/game")
+        .withUrl("https://localhost:7017/game",{ accessTokenFactory: () => getToken()!.value })
         .build()
 
-    hubConnection.on("CreateSuccess", (id,lobby) => { console.log(id,lobby);  })
+    hubConnection.on("CreateSuccess", (id,lobby) => { console.log("Created",id,lobby);  })
+    hubConnection.on("PlayerJoined", (lobby) => { console.log("PlayerJoined", lobby);  })
 
     useEffect(() => {
         (async () => {
