@@ -1,4 +1,4 @@
-import { FC, useEffect } from 'react'
+import { FC, useEffect, useState } from 'react'
 import { RootState } from '../../store'
 import { ConnectedProps, connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
@@ -17,6 +17,9 @@ const connector = connect(mapState)
 const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     const navigate = useNavigate()
 
+    const [username, setUsername] = useState("");
+    const [lobbyCode, setLobbyCode] = useState(0);
+
     const hubConnection = new signalR.HubConnectionBuilder()
         .withUrl("https://localhost:7017/game")
         .build()
@@ -25,24 +28,26 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
     useEffect(() => {
         (async () => {
-            await hubConnection.start().catch(err => console.log(err))
+
         })()
     }, [])
 
     const ConnectToLobby = () => {
-        if (hubConnection.state === signalR.HubConnectionState.Connected) {
-            hubConnection.invoke("JoinLobby",0,"qwerty").catch(err => console.log(err))
-        }
+        hubConnection.start().finally(() => {
+            if (hubConnection.state === signalR.HubConnectionState.Connected) {
+                hubConnection.invoke("JoinLobby", lobbyCode, username).catch(err => console.log(err))
+            }
+        }).catch(err => console.log(err))
     }
 
     return (
         <div>
             StartPlayer
             Name:
-            <input>
+            <input value={username} onChange={e => setUsername(e.target.value)} >
             </input>
             Game:
-            <input>
+            <input input-type="number" value={lobbyCode} onChange={e => setLobbyCode(parseInt(e.target.value))}>
             </input>
             <button onClick={() => ConnectToLobby()}>
                 Connect to game
