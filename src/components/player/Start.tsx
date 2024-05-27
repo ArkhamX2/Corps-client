@@ -24,7 +24,13 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         .withUrl("https://localhost:7017/game")
         .build()
 
-    hubConnection.on("JoinSuccess", () => { console.log("joined"); })
+        
+
+        //TODO: Переделать navigate на редукс
+    hubConnection.on("JoinSuccess", (lobby) => {
+        console.log("joined");
+        navigate('/lobbyPlayer', { state: { hub: hubConnection,username: username,code: lobbyCode,lobby: lobby as Lobby } })
+    })
 
     useEffect(() => {
         (async () => {

@@ -15,12 +15,15 @@ const connector = connect(mapState)
 
 const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
+    const [lobby, setLobby] = useState({} as Lobby)
+
     const hubConnection = new signalR.HubConnectionBuilder()
-        .withUrl("https://localhost:7017/game",{ accessTokenFactory: () => getToken()!.value })
+        .withUrl("https://localhost:7017/game", { accessTokenFactory: () => getToken()!.value })
         .build()
 
-    hubConnection.on("CreateSuccess", (id,lobby) => { console.log("Created",id,lobby);  })
-    hubConnection.on("PlayerJoined", (lobby) => { console.log("PlayerJoined", lobby);  })
+    hubConnection.on("CreateSuccess", (id, lobby) => { console.log("Created", id, lobby); setLobby({id:id,...lobby} as Lobby) })
+    hubConnection.on("PlayerJoined", (lobby) => { console.log("PlayerJoined", lobby); setLobby(lobby) })
+    hubConnection.on("LobbyMemberReady", (lobby) => { console.log("PlayerJoined", lobby); setLobby(lobby) })
 
     useEffect(() => {
         (async () => {
@@ -36,7 +39,12 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     return (
         <div>
             LobbyHost
-            
+            {lobby.lobbyMemberList.map((item: LobbyMember) => (
+                <div>{item.username}</div>
+            ))}
+            <div>
+                <button onClick={() => hubConnection.invoke("StartGame", lobby.id)}>StartGame</button>
+            </div>
         </div>
     )
 }
