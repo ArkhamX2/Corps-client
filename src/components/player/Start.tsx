@@ -4,7 +4,9 @@ import { ConnectedProps, connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import * as signalR from '@microsoft/signalr';
 import { useAppDispatch } from '../../utility/hook';
-import { updateLobbyData } from '../../store/lobbySlice';
+import { updateLobbyData } from '../../store/lobbyDataSlice';
+import { updateHubConnection } from '../../store/hubConnectionSlice';
+import { updatePlayerData } from '../../store/playerDataSlice';
 
 const mapState = (state: RootState) => (
     {
@@ -27,13 +29,12 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         .withUrl("https://localhost:7017/game")
         .build()
 
-        
-
-        //TODO: Переделать navigate на редукс
     hubConnection.on("JoinSuccess", (lobby) => {
         console.log("joined",lobby);
         dispatch(updateLobbyData({code: lobbyCode,...lobby}));
-        navigate('/lobbyPlayer',{state:{ hub: hubConnection,username: username}})
+        dispatch(updateHubConnection({hubConnection: hubConnection}));
+        dispatch(updatePlayerData({name: username}))
+        navigate('/lobbyPlayer')
         
         console.log("joined33");
     })

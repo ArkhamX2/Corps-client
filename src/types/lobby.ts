@@ -1,12 +1,12 @@
-enum LobbyState  {
+export enum LobbyState  {
     Wait,
     Start
 }
-type LobbyMember  =  { 
+export type LobbyMember  =  { 
     username: string, 
     isReady: boolean,
 }
-type Lobby = {
+export type LobbyType = {
     id: number,
     state: LobbyState, 
     code: number,

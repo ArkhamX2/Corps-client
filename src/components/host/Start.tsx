@@ -5,7 +5,7 @@ import { getToken, setToken } from '../../utility/token'
 import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../utility/hook';
-import { updateAccountData } from '../../store/accountSlice';
+import { updateAccountData } from '../../store/accountStateDataSlice';
 
 const mapState = (state: RootState) => (
     {

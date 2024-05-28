@@ -1,17 +1,18 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { LobbyType, LobbyState } from '../types/lobby';
 
-const initialState:Lobby = {
+const initialState:LobbyType = {
     id:0,
     lobbyMemberList:[],
     code:0,
     state:LobbyState.Wait,
 }
 
-const lobbySlice = createSlice({
-    name: 'lobbySlice',
+const lobbyDataSlice = createSlice({
+    name: 'lobbyDataSlice',
     initialState,
     reducers: {
-        updateLobbyData(state, action: PayloadAction<Lobby>)
+        updateLobbyData(state, action: PayloadAction<LobbyType>)
         {
             state.id=action.payload.id
             state.lobbyMemberList=action.payload.lobbyMemberList
@@ -24,6 +25,6 @@ const lobbySlice = createSlice({
     }
 })
 
-export const {updateLobbyData} = lobbySlice.actions
+export const {updateLobbyData} = lobbyDataSlice.actions
 
-export default lobbySlice.reducer
+export default lobbyDataSlice.reducer

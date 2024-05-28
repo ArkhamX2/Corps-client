@@ -1,12 +1,14 @@
 import { FC, JSXElementConstructor, ReactElement, ReactNode, ReactPortal, useEffect } from 'react'
 import { RootState } from '../../store'
 import { ConnectedProps, connect } from 'react-redux'
-import { useLocation } from 'react-router-dom'
 import signalR from '@microsoft/signalr'
+import { LobbyMember } from '../../types/lobby'
 
 const mapState = (state: RootState) => (
     {
-
+        hubConnection: state.hubConnection.hubConnection,
+        lobby: state.lobbyData,
+        username: state.playerData.name
     }
 )
 
@@ -16,15 +18,14 @@ const connector = connect(mapState)
 
 const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
-    const { state } = useLocation();
-
     const Ready = () => {
-            state.hubConnection.invoke("LobbyMemberReady", state.lobbyCode, state.username).catch((err: any) => console.log(err))
+        if (props.hubConnection)
+            props.hubConnection.invoke("LobbyMemberReady", props.lobby.code, props.username).catch((err: any) => console.log(err))
     }
 
     return (
         <div>
-            {state.lobby.lobbyMemberList.map((item: LobbyMember) => (
+            {props.lobby.lobbyMemberList.map((item: LobbyMember) => (
                 <div>{item.username}</div>
             ))}
             <div>

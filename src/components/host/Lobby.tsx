@@ -3,9 +3,10 @@ import { RootState } from '../../store'
 import { ConnectedProps, connect } from 'react-redux'
 import * as signalR from '@microsoft/signalr';
 import { getToken } from '../../utility/token';
+import { LobbyMember, LobbyType } from '../../types/lobby'
 const mapState = (state: RootState) => (
     {
-        logged: state.account.logged
+        logged: state.accountStateData.logged
     }
 )
 
@@ -15,15 +16,14 @@ const connector = connect(mapState)
 
 const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
-    const [lobby, setLobby] = useState({} as Lobby)
+    const [lobby, setLobby] = useState<LobbyType>()
 
     const hubConnection = new signalR.HubConnectionBuilder()
         .withUrl("https://localhost:7017/game", { accessTokenFactory: () => getToken()!.value })
         .build()
-
-    hubConnection.on("CreateSuccess", (id, lobby) => { console.log("Created", id, lobby); setLobby({ id: id, ...lobby } as Lobby) })
-    hubConnection.on("PlayerJoined", (lobby) => { console.log("PlayerJoined", lobby); setLobby(lobby) })
-    hubConnection.on("LobbyMemberReady", (lobby) => { console.log("PlayerJoined", lobby); setLobby(lobby) })
+    hubConnection.on("CreateSuccess", (lobby:LobbyType) => { console.log("Created", lobby); setLobby(lobby) })
+    hubConnection.on("PlayerJoined", (lobby:LobbyType) => { console.log("PlayerJoined", lobby); setLobby(lobby) })
+    hubConnection.on("LobbyMemberReady", (lobby:LobbyType) => { console.log("PlayerJoined", lobby); setLobby(lobby) })
 
     useEffect(() => {
         (async () => {
@@ -38,7 +38,7 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
 
     const StartGame = async () => {
-        if (hubConnection.state === signalR.HubConnectionState.Connected) {
+        if (hubConnection.state === signalR.HubConnectionState.Connected && lobby) {
             hubConnection.invoke("StartGame", lobby.id)
         }
     }
@@ -47,7 +47,7 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     return (
         <div>
             LobbyHost
-            {lobby.lobbyMemberList !== undefined ?
+            {lobby && lobby.lobbyMemberList ?
                 lobby.lobbyMemberList.map((item: LobbyMember) => (
                     <div>{item.username}</div>
                 )) : <></>}
