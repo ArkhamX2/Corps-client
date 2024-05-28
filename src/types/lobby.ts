@@ -9,5 +9,6 @@ type LobbyMember  =  {
 type Lobby = {
     id: number,
     state: LobbyState, 
+    code: number,
     lobbyMemberList: Array<LobbyMember>,
 }

@@ -3,6 +3,8 @@ import { RootState } from '../../store'
 import { ConnectedProps, connect } from 'react-redux'
 import { useNavigate } from 'react-router-dom'
 import * as signalR from '@microsoft/signalr';
+import { useAppDispatch } from '../../utility/hook';
+import { updateLobbyData } from '../../store/lobbySlice';
 
 const mapState = (state: RootState) => (
     {
@@ -15,6 +17,7 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 const connector = connect(mapState)
 
 const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
+    const dispatch = useAppDispatch()
     const navigate = useNavigate()
 
     const [username, setUsername] = useState("");
@@ -28,8 +31,11 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
         //TODO: Переделать navigate на редукс
     hubConnection.on("JoinSuccess", (lobby) => {
-        console.log("joined");
-        navigate('/lobbyPlayer', { state: { hub: hubConnection,username: username,code: lobbyCode,lobby: lobby as Lobby } })
+        console.log("joined",lobby);
+        dispatch(updateLobbyData({code: lobbyCode,...lobby}));
+        navigate('/lobbyPlayer',{state:{ hub: hubConnection,username: username}})
+        
+        console.log("joined33");
     })
 
     useEffect(() => {
