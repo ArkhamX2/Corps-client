@@ -6,10 +6,14 @@ import Modal from 'react-modal';
 import { useNavigate } from 'react-router-dom';
 import { useAppDispatch } from '../../utility/hook';
 import { updateAccountData } from '../../store/accountStateDataSlice';
+import * as signalR from '@microsoft/signalr';
+import { LobbyType } from '../../types/lobby';
+import { updateLobbyData } from '../../store/lobbyDataSlice';
+import { updateHubConnection } from '../../store/hubConnectionSlice';
 
 const mapState = (state: RootState) => (
     {
-        
+
     }
 )
 
@@ -32,12 +36,13 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     const createLobby = () => {
         if (getToken() != null) {
             console.log("registered")
-            dispatch(updateAccountData({logged: true}))
+            dispatch(updateAccountData({ logged: true }))
+            connectToHub();
             navigate('/lobbyHost')
         }
         else {
             console.log("not registered")
-            dispatch(updateAccountData({logged: false}))
+            dispatch(updateAccountData({ logged: false }))
             openModal()
         }
     }
@@ -54,6 +59,40 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
     function closeModal() {
         setIsOpen(false);
+    }
+
+    const connectToHub = async () => {
+        const hubConnection = new signalR.HubConnectionBuilder()
+            .withUrl("https://localhost:7017/game", { accessTokenFactory: () => getToken()!.value })
+            .build()
+
+        hubConnection.on("CreateSuccess", (lobby: LobbyType) => {
+            console.log("Created", lobby);
+            dispatch(updateLobbyData(lobby));
+            dispatch(updateHubConnection({ hubConnection: hubConnection }));
+        })
+
+        hubConnection.on("PlayerJoined", (lobby: LobbyType) => {
+            console.log("PlayerJoined", lobby);
+            dispatch(updateLobbyData(lobby));
+        })
+        
+        hubConnection.on("LobbyMemberReady", (lobby: LobbyType) => {
+            console.log("PlayerReady", lobby);
+            dispatch(updateLobbyData(lobby));
+        })
+
+        hubConnection.on("GameStarted", (lobby) => {
+            console.log("GameStarted", lobby);
+        })
+
+        await hubConnection.start().finally(() => {
+            if (hubConnection.state === signalR.HubConnectionState.Connected) {
+                hubConnection.invoke("CreateLobby").catch(err => console.log(err))
+            }
+            console.log(hubConnection);
+
+        }).catch(err => console.log(err))
     }
 
     const LoginClick = async () => {

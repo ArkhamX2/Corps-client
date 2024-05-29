@@ -10,7 +10,7 @@ import { updatePlayerData } from '../../store/playerDataSlice';
 
 const mapState = (state: RootState) => (
     {
-        
+
     }
 )
 
@@ -41,6 +41,10 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         }
 
         console.log("joined33");
+    })
+
+    hubConnection.on("GameStarted", (lobby) => {
+        console.log("GameStarted", lobby);
     })
 
     useEffect(() => {

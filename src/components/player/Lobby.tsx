@@ -23,8 +23,9 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
             props.hubConnection.invoke("LobbyMemberReady", props.lobby.id, props.player.id).catch((err: any) => console.log(err))
     }
 
-    if (props.hubConnection)
-        props.hubConnection.on("GameStarted", (lobby) => { console.log("GameStarted", lobby); })
+    const TestConnection = () => {
+        console.log(props.hubConnection?.state)
+    }
 
     return (
         <div>
@@ -32,7 +33,8 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                 <div>{item.username}</div>
             ))}
             <div>
-                <button onClick={() => Ready()} />
+                <button onClick={() => Ready()}>READY</button>
+                <button onClick={() => TestConnection()}>TestConnection</button>
             </div>
         </div>
     )
