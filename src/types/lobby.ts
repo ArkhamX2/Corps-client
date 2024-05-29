@@ -3,12 +3,13 @@ export enum LobbyState  {
     Start
 }
 export type LobbyMember  =  { 
+    id: number,
     username: string, 
     isReady: boolean,
 }
 export type LobbyType = {
     id: number,
     state: LobbyState, 
-    code: number,
+    code: string,
     lobbyMemberList: Array<LobbyMember>,
 }

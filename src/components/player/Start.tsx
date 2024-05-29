@@ -23,19 +23,19 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     const navigate = useNavigate()
 
     const [username, setUsername] = useState("");
-    const [lobbyCode, setLobbyCode] = useState(0);
+    const [lobbyCode, setLobbyCode] = useState("");
 
     const hubConnection = new signalR.HubConnectionBuilder()
         .withUrl("https://localhost:7017/game")
         .build()
 
-    hubConnection.on("JoinSuccess", (lobby) => {
-        console.log("joined",lobby);
-        dispatch(updateLobbyData({code: lobbyCode,...lobby}));
-        dispatch(updateHubConnection({hubConnection: hubConnection}));
-        dispatch(updatePlayerData({name: username}))
+    hubConnection.on("JoinSuccess", (lobby, playerId) => {
+        console.log("joined", lobby);
+        dispatch(updateLobbyData(lobby));
+        dispatch(updateHubConnection({ hubConnection: hubConnection }));
+        dispatch(updatePlayerData({ id: playerId, name: username }))
         navigate('/lobbyPlayer')
-        
+
         console.log("joined33");
     })
 
@@ -60,7 +60,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
             <input value={username} onChange={e => setUsername(e.target.value)} >
             </input>
             Game:
-            <input input-type="number" value={lobbyCode} onChange={e => setLobbyCode(parseInt(e.target.value))}>
+            <input value={lobbyCode} onChange={e => setLobbyCode(e.target.value)}>
             </input>
             <button onClick={() => ConnectToLobby()}>
                 Connect to game

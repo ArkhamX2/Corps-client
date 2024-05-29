@@ -2,13 +2,13 @@ import { FC, JSXElementConstructor, ReactElement, ReactNode, ReactPortal, useEff
 import { RootState } from '../../store'
 import { ConnectedProps, connect } from 'react-redux'
 import signalR from '@microsoft/signalr'
-import { LobbyMember } from '../../types/lobby'
+import { LobbyMember, LobbyType } from '../../types/lobby'
 
 const mapState = (state: RootState) => (
     {
         hubConnection: state.hubConnection.hubConnection,
         lobby: state.lobbyData,
-        username: state.playerData.name
+        player: state.playerData
     }
 )
 
@@ -20,8 +20,11 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
     const Ready = () => {
         if (props.hubConnection)
-            props.hubConnection.invoke("LobbyMemberReady", props.lobby.code, props.username).catch((err: any) => console.log(err))
+            props.hubConnection.invoke("LobbyMemberReady", props.lobby.id, props.player.id).catch((err: any) => console.log(err))
     }
+
+    if (props.hubConnection)
+        props.hubConnection.on("GameStarted", (lobby) => { console.log("GameStarted", lobby); })
 
     return (
         <div>

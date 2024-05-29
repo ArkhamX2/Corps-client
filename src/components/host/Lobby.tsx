@@ -21,9 +21,13 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     const hubConnection = new signalR.HubConnectionBuilder()
         .withUrl("https://localhost:7017/game", { accessTokenFactory: () => getToken()!.value })
         .build()
-    hubConnection.on("CreateSuccess", (lobby:LobbyType) => { console.log("Created", lobby); setLobby(lobby) })
-    hubConnection.on("PlayerJoined", (lobby:LobbyType) => { console.log("PlayerJoined", lobby); setLobby(lobby) })
-    hubConnection.on("LobbyMemberReady", (lobby:LobbyType) => { console.log("PlayerJoined", lobby); setLobby(lobby) })
+    hubConnection.serverTimeoutInMilliseconds = 1000 * 60 * 2
+    hubConnection.keepAliveIntervalInMilliseconds = 1000 * 60 * 10
+    hubConnection.on("CreateSuccess", (lobby:LobbyType) => { console.log("Created", lobby); setLobby(lobby); console.log(hubConnection);
+     })
+    hubConnection.on("PlayerJoined", (lobby:LobbyType) => { console.log("PlayerJoined", lobby); setLobby(lobby); console.log(hubConnection); })
+    hubConnection.on("LobbyMemberReady", (lobby:LobbyType) => { console.log("PlayerReady", lobby); setLobby(lobby); console.log(hubConnection); })
+    hubConnection.on("GameStarted", (lobby) => { console.log("GameStarted", lobby); console.log(hubConnection); })
 
     useEffect(() => {
         (async () => {
@@ -32,15 +36,17 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                 if (hubConnection.state === signalR.HubConnectionState.Connected) {
                     hubConnection.invoke("CreateLobby").catch(err => console.log(err))
                 }
+                console.log(hubConnection);
             }
         })()
     }, [])
 
 
-    const StartGame = async () => {
-        if (hubConnection.state === signalR.HubConnectionState.Connected && lobby) {
-            hubConnection.invoke("StartGame", lobby.id)
-        }
+    const StartGame = () => {
+        console.log(lobby);
+        console.log(hubConnection);
+        console.log("invoked");
+        hubConnection.invoke("StartGame", lobby!.id).catch(err  => console.log(err))
     }
 
 

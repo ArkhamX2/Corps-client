@@ -4,7 +4,7 @@ import { LobbyType, LobbyState } from '../types/lobby';
 const initialState:LobbyType = {
     id:0,
     lobbyMemberList:[],
-    code:0,
+    code:"",
     state:LobbyState.Wait,
 }
 
