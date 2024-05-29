@@ -10,7 +10,7 @@ import { updatePlayerData } from '../../store/playerDataSlice';
 
 const mapState = (state: RootState) => (
     {
-
+        playerData: state.playerData
     }
 )
 
@@ -24,6 +24,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
     const [username, setUsername] = useState("");
     const [lobbyCode, setLobbyCode] = useState("");
+    var Flick = false
 
     const hubConnection = new signalR.HubConnectionBuilder()
         .withUrl("https://localhost:7017/game")
@@ -32,9 +33,12 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     hubConnection.on("JoinSuccess", (lobby, playerId) => {
         console.log("joined", lobby);
         dispatch(updateLobbyData(lobby));
-        dispatch(updateHubConnection({ hubConnection: hubConnection }));
-        dispatch(updatePlayerData({ id: playerId, name: username }))
-        navigate('/lobbyPlayer')
+        if (!Flick) {
+            dispatch(updateHubConnection({ hubConnection: hubConnection }));
+            dispatch(updatePlayerData({ id: playerId, name: username }))
+            navigate('/lobbyPlayer')
+            Flick = true
+        }
 
         console.log("joined33");
     })

@@ -1,12 +1,12 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: playerData = {
-    id: 0,
+    id: undefined,
     name: "undefined"
 }
 
 type playerData = {
-    id: number,
+    id?: number,
     name: string
 }
 
