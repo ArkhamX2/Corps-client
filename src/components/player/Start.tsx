@@ -10,7 +10,7 @@ import { updatePlayerData } from '../../store/playerDataSlice';
 
 const mapState = (state: RootState) => (
     {
-        playerData: state.playerData
+        
     }
 )
 
