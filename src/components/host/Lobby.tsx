@@ -21,8 +21,6 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     const hubConnection = new signalR.HubConnectionBuilder()
         .withUrl("https://localhost:7017/game", { accessTokenFactory: () => getToken()!.value })
         .build()
-    hubConnection.serverTimeoutInMilliseconds = 1000 * 60 * 2
-    hubConnection.keepAliveIntervalInMilliseconds = 1000 * 60 * 10
     hubConnection.on("CreateSuccess", (lobby:LobbyType) => { console.log("Created", lobby); setLobby(lobby); console.log(hubConnection);
      })
     hubConnection.on("PlayerJoined", (lobby:LobbyType) => { console.log("PlayerJoined", lobby); setLobby(lobby); console.log(hubConnection); })
