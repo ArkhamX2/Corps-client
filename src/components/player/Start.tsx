@@ -26,34 +26,34 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     const [lobbyCode, setLobbyCode] = useState("");
     var Flick = false
 
-    const hubConnection = new signalR.HubConnectionBuilder()
-        .withUrl("https://localhost:7017/game")
-        .build()
-
-    hubConnection.on("JoinSuccess", (lobby, playerId) => {
-        console.log("joined", lobby);
-        dispatch(updateLobbyData(lobby));
-        if (!Flick) {
-            dispatch(updateHubConnection({ hubConnection: hubConnection }));
-            dispatch(updatePlayerData({ id: playerId, name: username }))
-            navigate('/lobbyPlayer')
-            Flick = true
-        }
-
-        console.log("joined33");
-    })
-
-    hubConnection.on("GameStarted", (lobby) => {
-        console.log("GameStarted", lobby);
-    })
-
     useEffect(() => {
         (async () => {
 
         })()
     }, [])
 
-    const ConnectToLobby = () => {
+    const connectToHub = () => {
+        const hubConnection = new signalR.HubConnectionBuilder()
+            .withUrl("https://localhost:7017/game")
+            .build()
+
+        hubConnection.on("JoinSuccess", (lobby, playerId) => {
+            console.log("joined", lobby);
+            dispatch(updateLobbyData(lobby));
+            if (!Flick) {
+                dispatch(updateHubConnection({ hubConnection: hubConnection }));
+                dispatch(updatePlayerData({ id: playerId, name: username }))
+                navigate('/lobbyPlayer')
+                Flick = true
+            }
+
+            console.log("joined33");
+        })
+
+        hubConnection.on("GameStarted", (lobby) => {
+            console.log("GameStarted", lobby);
+        })
+
         hubConnection.start().finally(() => {
             if (hubConnection.state === signalR.HubConnectionState.Connected) {
                 hubConnection.invoke("JoinLobby", lobbyCode, username).catch(err => console.log(err))
@@ -70,7 +70,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
             Game:
             <input value={lobbyCode} onChange={e => setLobbyCode(e.target.value)}>
             </input>
-            <button onClick={() => ConnectToLobby()}>
+            <button onClick={() => connectToHub()}>
                 Connect to game
             </button>
         </div>
