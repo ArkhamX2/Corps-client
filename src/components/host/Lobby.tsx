@@ -30,9 +30,13 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     }, [])
 
     const StartGame = () => {
-        if (props.lobby.lobbyMembers.filter((item: LobbyMember) => {
-            item.isReady == false
-        }).length==0) {
+        var allReady = 0
+        props.lobby.lobbyMembers.map((player)=>{
+            if(player.isReady==true)
+                allReady+=1
+        })
+        if (allReady==props.lobby.lobbyMembers.length && allReady != 0)
+        {
             console.log(props.lobby);
             console.log(props.hubConnection);
             console.log("invoked");
