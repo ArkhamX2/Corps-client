@@ -42,16 +42,10 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
             dispatch(updateLobbyData(lobby));
             if (!Flick) {
                 dispatch(updateHubConnection({ hubConnection: hubConnection }));
-                dispatch(updatePlayerData({ id: playerId, name: username }))
+                dispatch(updatePlayerData({ id: playerId, name: username }))                
                 navigate('/lobbyPlayer')
                 Flick = true
             }
-
-            console.log("joined33");
-        })
-
-        hubConnection.on("GameStarted", (lobby) => {
-            console.log("GameStarted", lobby);
         })
 
         hubConnection.start().finally(() => {

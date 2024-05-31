@@ -6,6 +6,7 @@ import { getToken } from '../../utility/token';
 import { LobbyMember, LobbyType } from '../../types/lobby'
 import { useAppDispatch } from '../../utility/hook';
 import { updateLobbyData } from '../../store/lobbyDataSlice';
+import { useNavigate } from 'react-router-dom';
 const mapState = (state: RootState) => (
     {
         hubConnection: state.hubConnection.hubConnection,
@@ -20,6 +21,7 @@ const connector = connect(mapState)
 
 const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     const dispatch = useAppDispatch()
+    const navigate = useNavigate()
 
     useEffect(() => {
         (async () => {
@@ -32,6 +34,7 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         console.log(props.hubConnection);
         console.log("invoked");
         props.hubConnection?.invoke("StartGame", props.lobby.id).catch(err => console.log(err))
+        navigate('/gameHost')
     }
 
     const TestConnection = () => {
@@ -41,8 +44,8 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     return (
         <div>
             LobbyHost
-            {props.lobby.lobbyMemberList ?
-                props.lobby.lobbyMemberList.map((item: LobbyMember) => (
+            {props.lobby.lobbyMembers ?
+                props.lobby.lobbyMembers.map((item: LobbyMember) => (
                     <div>{item.username}</div>
                 )) : <></>}
             <div>

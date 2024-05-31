@@ -2,12 +2,19 @@ import { createSlice, PayloadAction } from '@reduxjs/toolkit';
 
 const initialState: playerData = {
     id: undefined,
-    name: "undefined"
+    name: "undefined",
+    cards: undefined
+}
+
+export type cardType = {
+    id: number,
+    state: number
 }
 
 type playerData = {
     id?: number,
-    name: string
+    name: string,
+    cards?: cardType[]
 }
 
 const playerDataSlice = createSlice({
@@ -16,7 +23,8 @@ const playerDataSlice = createSlice({
     reducers: {
         updatePlayerData(state, action: PayloadAction<playerData>) {
             state.id = action.payload.id;
-            state.name = action.payload.name
+            state.name = action.payload.name;
+            state.cards = action.payload.cards;
         }
     },
     extraReducers: (builder) => {

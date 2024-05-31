@@ -3,7 +3,7 @@ import { LobbyType, LobbyState } from '../types/lobby';
 
 const initialState:LobbyType = {
     id:0,
-    lobbyMemberList:[],
+    lobbyMembers:[],
     code:"",
     state:LobbyState.Wait,
 }
@@ -15,7 +15,7 @@ const lobbyDataSlice = createSlice({
         updateLobbyData(state, action: PayloadAction<LobbyType>)
         {
             state.id=action.payload.id
-            state.lobbyMemberList=action.payload.lobbyMemberList
+            state.lobbyMembers=action.payload.lobbyMembers
             state.code=action.payload.code
             state.state=action.payload.state
         }

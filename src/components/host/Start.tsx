@@ -34,11 +34,10 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     }, [])
 
     const createLobby = () => {
-        if (getToken() != null) {
+        if (getToken()?.value != null) {
             console.log("registered")
             dispatch(updateAccountData({ logged: true }))
             connectToHub();
-            navigate('/lobbyHost')
         }
         else {
             console.log("not registered")
@@ -76,7 +75,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
             console.log("PlayerJoined", lobby);
             dispatch(updateLobbyData(lobby));
         })
-        
+
         hubConnection.on("LobbyMemberReady", (lobby: LobbyType) => {
             console.log("PlayerReady", lobby);
             dispatch(updateLobbyData(lobby));
@@ -88,11 +87,13 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
         await hubConnection.start().finally(() => {
             if (hubConnection.state === signalR.HubConnectionState.Connected) {
-                hubConnection.invoke("CreateLobby").catch(err => console.log(err))
+                hubConnection.invoke("CreateLobby", getToken()!.value).catch(err => { console.log(err); setToken(null); })
             }
             console.log(hubConnection);
 
         }).catch(err => console.log(err))
+        
+        navigate('/lobbyHost')
     }
 
     const LoginClick = async () => {
@@ -101,21 +102,32 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
-                    name: loginInfo.login,
+                    login: loginInfo.login,
                     password: loginInfo.password
                 })
             });
-            if (response.ok === true) {
+            if (response.ok === true) {                
                 const data = await response.json();
-                setToken(data.access_token);
-                navigate('/lobbyHost');
-                //username = data.username;
+                setToken(data.Token);
+                connectToHub();
             }
             else {
                 // если произошла ошибка, получаем код статуса
                 console.log(`Status: ${response.status}`);
             }
         }
+    }
+
+    const register = async () => {
+        const response = await fetch("https://localhost:7017/jwt/register", {
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                login: loginInfo.login,
+                password: loginInfo.password
+                //123_aA
+            })
+        });
     }
 
     return (
@@ -132,6 +144,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                 Password:
                 <input autoComplete='on' placeholder='Пароль' type='password' onChange={(e) => setLoginInfo({ ...loginInfo, password: e.target.value })}></input>
                 <button onClick={() => LoginClick()}>Submit</button>
+                <button onClick={() => register()}>REGISTER ME</button>
             </Modal>
             StartHost
             <button onClick={() => createLobby()}>

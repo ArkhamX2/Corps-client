@@ -16,7 +16,7 @@ export type StoredToken = {
     return diff > TOKEN_TTL_MS;
   };
   
-  const setToken = (access_token: string): void => {
+  const setToken = (access_token: string|null): void => {
     localStorage.setItem(
       TOKEN_KEY,
       JSON.stringify({

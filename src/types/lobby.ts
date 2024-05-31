@@ -11,5 +11,5 @@ export type LobbyType = {
     id: number,
     state: LobbyState, 
     code: string,
-    lobbyMemberList: Array<LobbyMember>,
+    lobbyMembers: Array<LobbyMember>,
 }
