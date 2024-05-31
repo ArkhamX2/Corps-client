@@ -25,7 +25,7 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
     useEffect(() => {
         (async () => {
-            
+
         })()
     }, [])
 
@@ -33,8 +33,8 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         console.log(props.lobby);
         console.log(props.hubConnection);
         console.log("invoked");
-        props.hubConnection?.invoke("StartGame", props.lobby.id).catch(err => console.log(err))
-        navigate('/gameHost')
+        props.hubConnection?.invoke("StartGame", props.lobby.id).then(() =>
+            navigate('/gameHost')).catch(err => console.log(err))
     }
 
     const TestConnection = () => {
