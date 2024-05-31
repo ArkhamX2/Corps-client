@@ -7,6 +7,7 @@ import { useAppDispatch } from '../../utility/hook';
 import { updateLobbyData } from '../../store/lobbyDataSlice';
 import { updateHubConnection } from '../../store/hubConnectionSlice';
 import { updatePlayerData } from '../../store/playerDataSlice';
+import { LobbyType } from '../../types/lobby';
 
 const mapState = (state: RootState) => (
     {
@@ -37,9 +38,18 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
             .withUrl("https://localhost:7017/game")
             .build()
 
+        hubConnection.on("PlayerJoined", (lobby: LobbyType) => {
+            console.log("PlayerJoined", lobby);
+            dispatch(updateLobbyData(lobby));
+        })
+
+        hubConnection.on("LobbyMemberReady", (lobby: LobbyType) => {
+            console.log("PlayerReady", lobby);
+            dispatch(updateLobbyData(lobby));
+        })
+
         hubConnection.on("JoinSuccess", (lobby, playerId) => {
             console.log("joined", lobby);
-            dispatch(updateLobbyData(lobby));
             if (!Flick) {
                 dispatch(updateHubConnection({ hubConnection: hubConnection }));
                 dispatch(updatePlayerData({ id: playerId, name: username }))                

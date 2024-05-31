@@ -1,4 +1,4 @@
-import { FC, JSXElementConstructor, ReactElement, ReactNode, ReactPortal, useEffect, useRef } from 'react'
+import { FC, JSXElementConstructor, ReactElement, ReactNode, ReactPortal, useEffect, useRef, useState } from 'react'
 import { RootState } from '../../store'
 import { ConnectedProps, connect } from 'react-redux'
 import signalR from '@microsoft/signalr'
@@ -48,7 +48,7 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     return (
         <div>
             {props.lobby.lobbyMembers.map((item: LobbyMember) => (
-                <div>{item.username}</div>
+                <div>name:{item.username}ready:{String(item.isReady)}</div>
             ))}
             <div>
                 <button onClick={() => Ready()}>READY</button>

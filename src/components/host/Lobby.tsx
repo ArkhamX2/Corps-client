@@ -30,11 +30,15 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     }, [])
 
     const StartGame = () => {
-        console.log(props.lobby);
-        console.log(props.hubConnection);
-        console.log("invoked");
-        props.hubConnection?.invoke("StartGame", props.lobby.id).then(() =>
-            navigate('/gameHost')).catch(err => console.log(err))
+        if (props.lobby.lobbyMembers.filter((item: LobbyMember) => {
+            item.isReady == false
+        }).length==0) {
+            console.log(props.lobby);
+            console.log(props.hubConnection);
+            console.log("invoked");
+            props.hubConnection?.invoke("StartGame", props.lobby.id).then(() =>
+                navigate('/gameHost')).catch(err => console.log(err))
+        }
     }
 
     const TestConnection = () => {
