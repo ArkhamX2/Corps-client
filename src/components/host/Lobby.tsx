@@ -46,7 +46,7 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
             LobbyHost
             {props.lobby.lobbyMembers ?
                 props.lobby.lobbyMembers.map((item: LobbyMember) => (
-                    <div>{item.username}</div>
+                    <div>name:{item.username}ready:{item.isReady}</div>
                 )) : <></>}
             <div>
                 <button onClick={() => StartGame()}>StartGame</button>
