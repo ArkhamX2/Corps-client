@@ -1,9 +1,10 @@
 import { FC, useEffect, useRef, useState } from 'react'
 import { RootState } from '../../store'
 import { ConnectedProps, connect } from 'react-redux'
+import { CardState, GameCard } from '../../types/game'
 
 type SelectedCard = {
-    selectedCardId: number,
+    selectedCard: GameCard,
     playerId: number
 }
 
@@ -24,8 +25,24 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     useEffect(() => {
         (() => {
             if (!hasPageBeenRendered.current["effect1"]) {
-                props.hubConnection?.on("CardSelected", (playerId: number, selectedCardId: number) => {
-                    setSelectedCards(oldArray => [...oldArray, { selectedCardId: selectedCardId, playerId: playerId }])
+                props.hubConnection?.on("CardSelected", (playerId: number, CardsUpdate: GameCard[]) => {
+                    console.log(playerId);
+                    console.log(CardsUpdate);
+                    CardsUpdate.map((card) => {
+                        switch (card.state) {
+                            case CardState.Unused:
+                                {                                    
+                                    //selectedCards.find((s)=>s.playerId==playerId)?.selectedCards.find((c)=>c.id!=card.id)
+                                    setSelectedCards(s => s.filter(c => c.selectedCard.id!=card.id))
+                                    break;
+                                }
+                            case CardState.Used:
+                                {
+                                    setSelectedCards(oldArray => [...oldArray, { selectedCard: card, playerId: playerId }])
+                                    break;
+                                }
+                        }
+                    })
                 })
             }
             hasPageBeenRendered.current["effect1"] = true
@@ -41,7 +58,7 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                         playerId: {i}
                         {selectedCards.filter((card) => card.playerId === i).map((card) =>
                             <div>
-                                selectedCardId: {card.selectedCardId}
+                                selectedCardId: {card.selectedCard.id} selectedCardState: {card.selectedCard.state}
                             </div>)}
                     </div>
                 )}

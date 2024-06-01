@@ -1,4 +1,5 @@
 import { createSlice, PayloadAction } from '@reduxjs/toolkit';
+import { GameCard } from '../types/game';
 
 const initialState: playerData = {
     id: undefined,
@@ -6,15 +7,10 @@ const initialState: playerData = {
     cards: undefined
 }
 
-export type cardType = {
-    id: number,
-    state: number
-}
-
 type playerData = {
     id?: number,
     name: string,
-    cards?: cardType[]
+    cards?: GameCard[]
 }
 
 const playerDataSlice = createSlice({

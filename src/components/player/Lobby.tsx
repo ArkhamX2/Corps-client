@@ -5,7 +5,8 @@ import signalR from '@microsoft/signalr'
 import { LobbyMember, LobbyType } from '../../types/lobby'
 import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../utility/hook'
-import { cardType, updatePlayerData } from '../../store/playerDataSlice'
+import { updatePlayerData } from '../../store/playerDataSlice'
+import { GameCard } from '../../types/game'
 
 const mapState = (state: RootState) => (
     {
@@ -35,7 +36,7 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     useEffect(() => {
         (() => {
             if (!hasPageBeenRendered.current["effect1"]) {
-                props.hubConnection?.on("GameStarted" + props.player.id, (playerHand:cardType[]) => {
+                props.hubConnection?.on("GameStarted" + props.player.id, (playerHand:GameCard[]) => {
                     console.log("GameStarted", playerHand);
                     dispatch(updatePlayerData({...props.player, cards:playerHand }));
                     navigate('/gamePlayer');
