@@ -11,8 +11,9 @@ const LobbyHost: React.FC<ComponentWithBackgroundImageProps> = ({ backgroundImag
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         width: '100%',
-        height: '400px', // Вы можете настроить высоту под ваши требования
+        height: '100%',
     };
+    
     return (
         <div style={divStyle}>
             <Lobby />
