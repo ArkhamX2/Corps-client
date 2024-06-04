@@ -12,7 +12,9 @@ const mapState = (state: RootState) => (
     {
         hubConnection: state.hubConnection.hubConnection,
         lobby: state.lobbyData,
-        player: state.playerData
+        player: state.playerData,
+        backgroundResourceData: state.backgroundResourceData,
+        userResourceData: state.userResourceData
     }
 )
 

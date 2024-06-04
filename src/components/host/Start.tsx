@@ -10,10 +10,15 @@ import * as signalR from '@microsoft/signalr';
 import { LobbyType } from '../../types/lobby';
 import { updateLobbyData } from '../../store/lobbyDataSlice';
 import { updateHubConnection } from '../../store/hubConnectionSlice';
+import { updateCardResourceData } from '../../store/cardResourceSlice';
+import { updateBackgroundResourceData } from '../../store/backgroundResourceSlice';
+import { updateUserResourceData } from '../../store/userResourceSlice';
+import { fetchCards, fetchBackground, fetchUser } from '../../utility/fetch';
 
 const mapState = (state: RootState) => (
     {
-
+        backgroundResourceData: state.backgroundResourceData,
+        userResourceData: state.userResourceData
     }
 )
 
@@ -30,6 +35,40 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     useEffect(() => {
         (async () => {
 
+             const fetchCards = async () => {
+                try {
+                    const response = await fetch('https://localhost:7017/api/resource/card');
+                    const data = await response.json();
+                    dispatch(updateCardResourceData({ dtos: data }));
+                } catch (error) {
+                    console.error('Error fetching cards:', error);
+                }
+            };
+            
+             const fetchBackground = async () => {
+                try {
+                    const response = await fetch('https://localhost:7017/api/resource/background');
+                    const data = await response.json();
+                    dispatch(updateBackgroundResourceData({ menu: data[0], board: data[1] }));
+                } catch (error) {
+                    console.error('Error fetching cards:', error);
+                }
+            };
+            
+             const fetchUser = async () => {
+                try {
+                    const response = await fetch('https://localhost:7017/api/resource/user');
+                    const data = await response.json();
+                    dispatch(updateUserResourceData({ dtos: data }));
+                } catch (error) {
+                    console.error('Error fetching cards:', error);
+                }
+            };
+
+            
+            fetchCards();
+            fetchBackground();
+            fetchUser();
         })()
     }, [])
 
@@ -95,6 +134,17 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         
         navigate('/lobbyHost')
     }
+    const arrayBufferView = new Uint8Array(props.backgroundResourceData.menu.imageData);
+    const blob = new Blob([arrayBufferView], { type: 'image/png' });
+    const imageUrl = URL.createObjectURL(blob);
+    
+    const divStyle: React.CSSProperties = {
+        backgroundImage: `url(${imageUrl})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        width: '100%',
+        height: '100%',
+    };
 
     const LoginClick = async () => {
         if (loginInfo.login != "" && loginInfo.password != "") {
@@ -131,7 +181,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     }
 
     return (
-        <div>
+        <div style={divStyle}>
             <Modal
                 isOpen={modalIsOpen}
                 onAfterOpen={afterOpenModal}
