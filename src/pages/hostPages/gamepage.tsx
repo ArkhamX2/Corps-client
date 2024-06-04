@@ -1,8 +1,20 @@
 import Game from "../../components/host/Game"
 
-const GameHost = () => {
+interface ComponentWithBackgroundImageProps {
+    backgroundImageBytes: Uint8Array;
+}
+const GameHost: React.FC<ComponentWithBackgroundImageProps> = ({ backgroundImageBytes }) => {
+    const backgroundImageUrl = `data:image/png;base64,${Buffer.from(backgroundImageBytes).toString('base64')}`;
+
+    const divStyle: React.CSSProperties = {
+        backgroundImage: `url(${backgroundImageUrl})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        width: '100%',
+        height: '400px', // Вы можете настроить высоту под ваши требования
+    };
     return (
-        <div>
+        <div style={divStyle}>
             <Game />
         </div>
     )

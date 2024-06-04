@@ -1,8 +1,22 @@
 import Lobby from "../../components/player/Lobby"
 
-const LobbyPlayer = () => {
+interface ComponentWithBackgroundImageProps {
+    backgroundImageBytes: Uint8Array;
+}
+
+const LobbyPlayer: React.FC<ComponentWithBackgroundImageProps> = ({ backgroundImageBytes }) => {
+    const backgroundImageUrl = `data:image/png;base64,${Buffer.from(backgroundImageBytes).toString('base64')}`;
+
+    const divStyle: React.CSSProperties = {
+        backgroundImage: `url(${backgroundImageUrl})`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        width: '100%',
+        height: '400px', // Вы можете настроить высоту под ваши требования
+    };
+
     return (
-        <div>
+        <div style={divStyle}>
             <Lobby />
         </div>
     )
