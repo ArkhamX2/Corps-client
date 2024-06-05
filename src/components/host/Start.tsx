@@ -39,7 +39,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     useEffect(() => {
         (async () => {
 
-             const fetchCards = async () => {
+            const fetchCards = async () => {
                 try {
                     const response = await fetch('https://localhost:7017/api/resource/card');
                     const data = await response.json();
@@ -48,8 +48,8 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                     console.error('Error fetching cards:', error);
                 }
             };
-            
-             const fetchBackground = async () => {
+
+            const fetchBackground = async () => {
                 try {
                     const response = await fetch('https://localhost:7017/api/resource/background');
                     const data = await response.json();
@@ -58,19 +58,19 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                     console.error('Error fetching cards:', error);
                 }
             };
-            
-             const fetchUser = async () => {
+
+            const fetchUser = async () => {
                 try {
                     const response = await fetch('https://localhost:7017/api/resource/user');
                     const data = await response.json();
                     dispatch(updateUserResourceData({ dtos: data }));
-                    
+
                 } catch (error) {
                     console.error('Error fetching cards:', error);
                 }
             };
 
-            
+
             await fetchCards();
             setLoadingCards(false);
             await fetchBackground();
@@ -139,10 +139,10 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
             console.log(hubConnection);
 
         }).catch(err => console.log(err))
-        
+
         navigate('/lobbyHost')
     }
-    
+
 
     const divStyle: React.CSSProperties = {
         backgroundImage: `url("data:image/png;base64, ${props.backgroundResourceData.menu.imageData}")`,
@@ -162,7 +162,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                     password: loginInfo.password
                 })
             });
-            if (response.ok === true) {                
+            if (response.ok === true) {
                 const data = await response.json();
                 setToken(data.Token);
                 connectToHub();
@@ -190,29 +190,32 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         loadingBackground ?
             <p>Загрузка заднего фона...</p> :
             loadingUser ?
+
                 <p>Загрузка автарок игроков...</p> :
+
                 loadingCards ?
                     <p>Загрузка карт...</p> :
-        <div style={divStyle}>
-            <Modal
-                isOpen={modalIsOpen}
-                onAfterOpen={afterOpenModal}
-                onRequestClose={closeModal}
-                contentLabel="Example Modal"
-                ariaHideApp={false}
-            >
-                Login:
-                <input autoComplete='on' placeholder='Логин' onChange={(e) => setLoginInfo({ ...loginInfo, login: e.target.value })}></input>
-                Password:
-                <input autoComplete='on' placeholder='Пароль' type='password' onChange={(e) => setLoginInfo({ ...loginInfo, password: e.target.value })}></input>
-                <button onClick={() => LoginClick()}>Submit</button>
-                <button onClick={() => register()}>REGISTER ME</button>
-            </Modal>
-            StartHost
-            <button onClick={() => createLobby()}>
-                Host game
-            </button>
-        </div>
+                    
+                    <div style={divStyle}>
+                        <Modal
+                            isOpen={modalIsOpen}
+                            onAfterOpen={afterOpenModal}
+                            onRequestClose={closeModal}
+                            contentLabel="Example Modal"
+                            ariaHideApp={false}
+                        >
+                            Login:
+                            <input autoComplete='on' placeholder='Логин' onChange={(e) => setLoginInfo({ ...loginInfo, login: e.target.value })}></input>
+                            Password:
+                            <input autoComplete='on' placeholder='Пароль' type='password' onChange={(e) => setLoginInfo({ ...loginInfo, password: e.target.value })}></input>
+                            <button onClick={() => LoginClick()}>Submit</button>
+                            <button onClick={() => register()}>REGISTER ME</button>
+                        </Modal>
+                        StartHost
+                        <button onClick={() => createLobby()}>
+                            Host game
+                        </button>
+                    </div>
     )
 }
 

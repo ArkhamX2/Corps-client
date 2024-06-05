@@ -7,11 +7,13 @@ import { LobbyMember, LobbyType } from '../../types/lobby'
 import { useAppDispatch } from '../../utility/hook';
 import { updateLobbyData } from '../../store/lobbyDataSlice';
 import { useNavigate } from 'react-router-dom';
+import { updateBackgroundResourceData } from '../../store/backgroundResourceSlice';
 const mapState = (state: RootState) => (
     {
         hubConnection: state.hubConnection.hubConnection,
         lobby: state.lobbyData,
-        logged: state.accountStateData.logged
+        logged: state.accountStateData.logged,
+        backgroundResourceData: state.backgroundResourceData
     }
 )
 
@@ -48,9 +50,16 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     const TestConnection = () => {
         console.log(props.hubConnection?.state)
     }
-
+    const divStyle: React.CSSProperties = {
+        backgroundImage: `url("data:image/png;base64, ${props.backgroundResourceData.menu.imageData}")`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        width: '100%',
+        height: '100%',
+    };
+    
     return (
-        <div>
+        <div style={divStyle}>
             LobbyHost
             {props.lobby.lobbyMembers ?
                 props.lobby.lobbyMembers.map((item: LobbyMember) => (

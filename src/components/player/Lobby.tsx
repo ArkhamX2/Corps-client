@@ -48,8 +48,16 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         })()
     }, []);
 
+    const divStyle: React.CSSProperties = {
+        backgroundImage: `url("data:image/png;base64, ${props.backgroundResourceData.menu.imageData}")`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        width: '100%',
+        height: '100%',
+    };
+    
     return (
-        <div>
+        <div style={divStyle}>
             {props.lobby.lobbyMembers.map((item: LobbyMember) => (
                 <div>name:{item.username}ready:{String(item.isReady)}</div>
             ))}

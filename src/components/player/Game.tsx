@@ -3,13 +3,14 @@ import { RootState } from '../../store'
 import { ConnectedProps, connect } from 'react-redux'
 import { CardState, GameCard } from '../../types/game'
 import { useAppDispatch } from '../../utility/hook'
-import { updatePlayerData } from '../../store/playerDataSlice'
-
 const mapState = (state: RootState) => (
     {
         hubConnection: state.hubConnection.hubConnection,
         lobby: state.lobbyData,
-        player: state.playerData
+        player: state.playerData,
+        backgroundResourceData: state.backgroundResourceData,
+        userResourceData: state.userResourceData,
+        cardResourceData: state.cardResourceData
     }
 )
 
@@ -48,25 +49,61 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     const selectCard = (selectedCardId: number) => {
         props.hubConnection?.invoke("SelectCard", props.lobby.id, props.player.id, selectedCardId).catch((err: any) => console.log(err))
     }
+
+    const divStyle: React.CSSProperties = {
+        backgroundImage: `url("data:image/png;base64, ${props.backgroundResourceData.menu.imageData}")`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        width: '100%',
+        height: '100%',
+    };
+
     return (
-        <div>
+        <div style={divStyle}>
             GamePlayer
             <div>
                 Cardbox
-                {props.player.cards?.map((card) =>
-                    <div>
+                {props.player.cards?.map((card) => {
+                    const cardInfo = props.cardResourceData.dtos.filter((x) => x.Id == card.id)[0];
+                    return (<div style={
+                        {
+                            backgroundImage: `url("data:imageFpng;base64, ${cardInfo.Background}")`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            width: '100%',
+                            height: '100%',
+                        }
+                    }>
                         cardId: {card.id}
+                        title: {cardInfo.Info.Title} {cardInfo.Info.Power}
+                        description: {cardInfo.Info.Description}
+                        direction: {cardInfo.Info.Direction}
                         <button onClick={() => selectCard(card.id)}>SELECT</button>
-                    </div>
+                    </div>)
+                }
+
                 )}
             </div>
             <div>
                 Selectbox
-                {selectedCards.map((card) =>
-                    <div>
+                {selectedCards.map((card) => {
+                    const cardInfo = props.cardResourceData.dtos.filter((x) => x.Id == card.id)[0];
+                    return (<div style={
+                        {
+                            backgroundImage: `url("data:imageFpng;base64, ${cardInfo.Background}")`,
+                            backgroundSize: 'cover',
+                            backgroundPosition: 'center',
+                            width: '100%',
+                            height: '100%',
+                        }
+                    }>
                         cardId: {card.id} cardState: {card.state}
+                        title: {cardInfo.Info.Title} {cardInfo.Info.Power}
+                        description: {cardInfo.Info.Description}
+                        direction: {cardInfo.Info.Direction}
                         <button onClick={() => selectCard(card.id)}>UNSELECT</button>
-                    </div>
+                    </div>)
+                }
                 )}
             </div>
         </div>
