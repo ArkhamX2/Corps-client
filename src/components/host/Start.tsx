@@ -32,6 +32,10 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
     const [loginInfo, setLoginInfo] = useState({ login: "", password: "" })
 
+    const [loadingBackground, setLoadingBackground] = useState(true);
+    const [loadingUser, setLoadingUser] = useState(true);
+    const [loadingCards, setLoadingCards] = useState(true);
+
     useEffect(() => {
         (async () => {
 
@@ -67,9 +71,12 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
             };
 
             
-            fetchCards();
-            fetchBackground();
-            fetchUser();
+            await fetchCards();
+            setLoadingCards(false);
+            await fetchBackground();
+            setLoadingBackground(false);
+            await fetchUser();
+            setLoadingUser(false);
         })()
     }, [])
 
@@ -180,6 +187,12 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     }
 
     return (
+        loadingBackground ?
+            <p>Загрузка заднего фона...</p> :
+            loadingUser ?
+                <p>Загрузка автарок игроков...</p> :
+                loadingCards ?
+                    <p>Загрузка карт...</p> :
         <div style={divStyle}>
             <Modal
                 isOpen={modalIsOpen}

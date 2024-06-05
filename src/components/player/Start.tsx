@@ -29,6 +29,11 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
     const [username, setUsername] = useState("");
     const [lobbyCode, setLobbyCode] = useState("");
+
+    const [loadingBackground, setLoadingBackground] = useState(true);
+    const [loadingUser, setLoadingUser] = useState(true);
+    const [loadingCards, setLoadingCards] = useState(true);
+
     var Flick = false
 
     useEffect(() => {
@@ -59,14 +64,19 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                     const response = await fetch('https://localhost:7017/api/resource/user');
                     const data = await response.json();
                     dispatch(updateUserResourceData({ dtos: data }));
+                    console.log(data);
+                    
                 } catch (error) {
                     console.error('Error fetching cards:', error);
                 }
             };
 
             await fetchCards();
+            setLoadingCards(false);
             await fetchBackground();
+            setLoadingBackground(false);
             await fetchUser();
+            setLoadingUser(false);
         })()
     }, [])
 
@@ -122,27 +132,35 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         setCurrentIndex((currentIndex - 1 + totalImages) % totalImages);
     };
 
+
+
     return (
-        <div style={divStyle}>
-            StartPlayer
-            Name:
-            <input value={username} onChange={e => setUsername(e.target.value)} >
-            </input>
-            Game:
-            <input value={lobbyCode} onChange={e => setLobbyCode(e.target.value)}>
-            </input>
-            Image:
-            <div>
-                {/* <img src={`url("data:image/png;base64, ${props.userResourceData.dtos[currentIndex].imageData}")`} alt={`UserIcon ${currentIndex + 1}`} /> */}
-                <div>
-                    <button onClick={showPreviousImage}>Назад</button>
-                    <button onClick={showNextImage}>Далее</button>
-                </div>
-            </div>
-            <button onClick={() => connectToHub()}>
-                Connect to game
-            </button>
-        </div>
+        loadingBackground ?
+            <p>Загрузка заднего фона...</p> :
+            loadingUser ?
+                <p>Загрузка автарок игроков...</p> :
+                loadingCards ?
+                    <p>Загрузка карт...</p> :
+                    <div style={divStyle}>
+                        StartPlayer
+                        Name:
+                        <input value={username} onChange={e => setUsername(e.target.value)} >
+                        </input>
+                        Game:
+                        <input value={lobbyCode} onChange={e => setLobbyCode(e.target.value)}>
+                        </input>
+                        Image:
+                        <div>
+                            // <img src={`url("data:image/png;base64, ${props.userResourceData.dtos[currentIndex].imageData}")`} alt={`UserIcon ${currentIndex + 1}`} />
+                            <div>
+                                <button onClick={showPreviousImage}>Назад</button>
+                                <button onClick={showNextImage}>Далее</button>
+                            </div>
+                        </div>
+                        <button onClick={() => connectToHub()}>
+                            Connect to game
+                        </button>
+                    </div>
     )
 }
 
