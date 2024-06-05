@@ -2,8 +2,8 @@
 export interface CardDTO {
     Id: number;
     Type: string;
-    Background: Uint8Array;
-    Icon: Uint8Array;
+    Background: string;
+    Icon: string;
     Info: CardInfoDTO;
 }
 

@@ -1,7 +1,7 @@
 export interface Image {
     name: string;
     type: ImageType;
-    imageData: Uint8Array;
+    imageData: string;
 }
 
 export enum ImageType {

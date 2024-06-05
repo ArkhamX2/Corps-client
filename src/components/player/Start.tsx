@@ -34,7 +34,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     useEffect(() => {
         (async () => {
 
-             const fetchCards = async () => {
+            const fetchCards = async () => {
                 try {
                     const response = await fetch('https://localhost:7017/api/resource/card');
                     const data = await response.json();
@@ -43,18 +43,18 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                     console.error('Error fetching cards:', error);
                 }
             };
-            
-             const fetchBackground = async () => {
+
+            const fetchBackground = async () => {
                 try {
                     const response = await fetch('https://localhost:7017/api/resource/background');
                     const data = await response.json();
-                    dispatch(updateBackgroundResourceData({ menu: data[0], board: data[1] }));
+                    dispatch(updateBackgroundResourceData({ menu: data[1], board: data[0] }));
                 } catch (error) {
                     console.error('Error fetching cards:', error);
                 }
             };
-            
-             const fetchUser = async () => {
+
+            const fetchUser = async () => {
                 try {
                     const response = await fetch('https://localhost:7017/api/resource/user');
                     const data = await response.json();
@@ -63,10 +63,10 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                     console.error('Error fetching cards:', error);
                 }
             };
-            
-            fetchCards();
-            fetchBackground();
-            fetchUser();
+
+            await fetchCards();
+            await fetchBackground();
+            await fetchUser();
         })()
     }, [])
 
@@ -102,10 +102,8 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         }).catch(err => console.log(err))
     }
 
-    const backgroundImageUrl = `data:image/png;base64,${Buffer.from(props.backgroundResourceData.menu.imageData).toString('base64')}`;
-
     const divStyle: React.CSSProperties = {
-        backgroundImage: `url(${backgroundImageUrl})`,
+        backgroundImage: `url("data:image/png;base64, ${props.backgroundResourceData.menu.imageData}")`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         width: '100%',
@@ -124,7 +122,6 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         setCurrentIndex((currentIndex - 1 + totalImages) % totalImages);
     };
 
-
     return (
         <div style={divStyle}>
             StartPlayer
@@ -136,7 +133,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
             </input>
             Image:
             <div>
-                <img src={`data:image/jpeg;base64,${props.userResourceData.dtos[currentIndex]}`} alt={`UserIcon ${currentIndex + 1}`} />
+                {/* <img src={`url("data:image/png;base64, ${props.userResourceData.dtos[currentIndex].imageData}")`} alt={`UserIcon ${currentIndex + 1}`} /> */}
                 <div>
                     <button onClick={showPreviousImage}>Назад</button>
                     <button onClick={showNextImage}>Далее</button>

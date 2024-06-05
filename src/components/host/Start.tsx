@@ -49,7 +49,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                 try {
                     const response = await fetch('https://localhost:7017/api/resource/background');
                     const data = await response.json();
-                    dispatch(updateBackgroundResourceData({ menu: data[0], board: data[1] }));
+                    dispatch(updateBackgroundResourceData({ menu: data[1], board: data[0] }));
                 } catch (error) {
                     console.error('Error fetching cards:', error);
                 }
@@ -60,6 +60,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                     const response = await fetch('https://localhost:7017/api/resource/user');
                     const data = await response.json();
                     dispatch(updateUserResourceData({ dtos: data }));
+                    
                 } catch (error) {
                     console.error('Error fetching cards:', error);
                 }
@@ -134,12 +135,10 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         
         navigate('/lobbyHost')
     }
-    const arrayBufferView = new Uint8Array(props.backgroundResourceData.menu.imageData);
-    const blob = new Blob([arrayBufferView], { type: 'image/png' });
-    const imageUrl = URL.createObjectURL(blob);
     
+
     const divStyle: React.CSSProperties = {
-        backgroundImage: `url(${imageUrl})`,
+        backgroundImage: `url("data:image/png;base64, ${props.backgroundResourceData.menu.imageData}")`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         width: '100%',

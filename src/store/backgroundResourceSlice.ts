@@ -4,12 +4,12 @@ import { Image, ImageType } from '../types/imageDTO';
 const initialState:backgroundResourceStateData = {
     menu:{
         name:"",
-        imageData:new Uint8Array,
+        imageData:"",
         type:ImageType.Menu
     },
     board:{
         name:"",
-        imageData:new Uint8Array,
+        imageData:"",
         type:ImageType.Board
     }
 }
