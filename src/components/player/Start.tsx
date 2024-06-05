@@ -8,13 +8,9 @@ import { updateLobbyData } from '../../store/lobbyDataSlice';
 import { updateHubConnection } from '../../store/hubConnectionSlice';
 import { updatePlayerData } from '../../store/playerDataSlice';
 import { LobbyType } from '../../types/lobby';
-import { updateBackgroundResourceData } from '../../store/backgroundResourceSlice';
-import { updateCardResourceData } from '../../store/cardResourceSlice';
-import { updateUserResourceData } from '../../store/userResourceSlice';
 
 const mapState = (state: RootState) => (
     {
-        backgroundResourceData: state.backgroundResourceData,
         userResourceData: state.userResourceData
     }
 )
@@ -30,53 +26,11 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     const [username, setUsername] = useState("");
     const [lobbyCode, setLobbyCode] = useState("");
 
-    const [loadingBackground, setLoadingBackground] = useState(true);
-    const [loadingUser, setLoadingUser] = useState(true);
-    const [loadingCards, setLoadingCards] = useState(true);
-
     var Flick = false
 
     useEffect(() => {
         (async () => {
 
-            const fetchCards = async () => {
-                try {
-                    const response = await fetch('https://localhost:7017/api/resource/card');
-                    const data = await response.json();
-                    dispatch(updateCardResourceData({ dtos: data }));
-                } catch (error) {
-                    console.error('Error fetching cards:', error);
-                }
-            };
-
-            const fetchBackground = async () => {
-                try {
-                    const response = await fetch('https://localhost:7017/api/resource/background');
-                    const data = await response.json();
-                    dispatch(updateBackgroundResourceData({ menu: data[1], board: data[0] }));
-                } catch (error) {
-                    console.error('Error fetching cards:', error);
-                }
-            };
-
-            const fetchUser = async () => {
-                try {
-                    const response = await fetch('https://localhost:7017/api/resource/user');
-                    const data = await response.json();
-                    dispatch(updateUserResourceData({ dtos: data }));
-                    console.log(data);
-                    
-                } catch (error) {
-                    console.error('Error fetching cards:', error);
-                }
-            };
-
-            await fetchCards();
-            setLoadingCards(false);
-            await fetchBackground();
-            setLoadingBackground(false);
-            await fetchUser();
-            setLoadingUser(false);
         })()
     }, [])
 
@@ -112,14 +66,6 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         }).catch(err => console.log(err))
     }
 
-    const divStyle: React.CSSProperties = {
-        backgroundImage: `url("data:image/png;base64, ${props.backgroundResourceData.menu.imageData}")`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        width: '100%',
-        height: '100%',
-    };
-
     const [currentIndex, setCurrentIndex] = useState(0);
 
     const totalImages = props.userResourceData.dtos.length;
@@ -132,40 +78,28 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         setCurrentIndex((currentIndex - 1 + totalImages) % totalImages);
     };
 
-
-
     return (
-        loadingBackground ?
-            <p>Загрузка заднего фона...</p> :
-            loadingUser ?
+        <div>
+            StartPlayer
+            Name:
+            <input value={username} onChange={e => setUsername(e.target.value)} >
+            </input>
+            Game:
+            <input value={lobbyCode} onChange={e => setLobbyCode(e.target.value)}>
+            </input>
+            Image:
+            <div>
+                {/* <img src={`url("data:image/png;base64, ${props.userResourceData.dtos[currentIndex].imageData}")`} alt={`UserIcon ${currentIndex + 1}`} /> */}
 
-                <p>Загрузка автарок игроков...</p> :
-
-                loadingCards ?
-
-                    <p>Загрузка карт...</p> :
-
-                    <div style={divStyle}>
-                        StartPlayer
-                        Name:
-                        <input value={username} onChange={e => setUsername(e.target.value)} >
-                        </input>
-                        Game:
-                        <input value={lobbyCode} onChange={e => setLobbyCode(e.target.value)}>
-                        </input>
-                        Image:
-                        <div>
-                            {/* <img src={`url("data:image/png;base64, ${props.userResourceData.dtos[currentIndex].imageData}")`} alt={`UserIcon ${currentIndex + 1}`} /> */}
-                            
-                            <div>
-                                <button onClick={showPreviousImage}>Назад</button>
-                                <button onClick={showNextImage}>Далее</button>
-                            </div>
-                        </div>
-                        <button onClick={() => connectToHub()}>
-                            Connect to game
-                        </button>
-                    </div>
+                <div>
+                    <button onClick={showPreviousImage}>Назад</button>
+                    <button onClick={showNextImage}>Далее</button>
+                </div>
+            </div>
+            <button onClick={() => connectToHub()}>
+                Connect to game
+            </button>
+        </div>
     )
 }
 
