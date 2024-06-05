@@ -10,14 +10,9 @@ import * as signalR from '@microsoft/signalr';
 import { LobbyType } from '../../types/lobby';
 import { updateLobbyData } from '../../store/lobbyDataSlice';
 import { updateHubConnection } from '../../store/hubConnectionSlice';
-import { updateCardResourceData } from '../../store/cardResourceSlice';
-import { updateBackgroundResourceData } from '../../store/backgroundResourceSlice';
-import { updateUserResourceData } from '../../store/userResourceSlice';
-import { fetchCards, fetchBackground, fetchUser } from '../../utility/fetch';
 
 const mapState = (state: RootState) => (
     {
-        backgroundResourceData: state.backgroundResourceData,
         userResourceData: state.userResourceData
     }
 )
@@ -32,51 +27,9 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
     const [loginInfo, setLoginInfo] = useState({ login: "", password: "" })
 
-    const [loadingBackground, setLoadingBackground] = useState(true);
-    const [loadingUser, setLoadingUser] = useState(true);
-    const [loadingCards, setLoadingCards] = useState(true);
-
     useEffect(() => {
         (async () => {
 
-            const fetchCards = async () => {
-                try {
-                    const response = await fetch('https://localhost:7017/api/resource/card');
-                    const data = await response.json();
-                    dispatch(updateCardResourceData({ dtos: data }));
-                } catch (error) {
-                    console.error('Error fetching cards:', error);
-                }
-            };
-
-            const fetchBackground = async () => {
-                try {
-                    const response = await fetch('https://localhost:7017/api/resource/background');
-                    const data = await response.json();
-                    dispatch(updateBackgroundResourceData({ menu: data[1], board: data[0] }));
-                } catch (error) {
-                    console.error('Error fetching cards:', error);
-                }
-            };
-
-            const fetchUser = async () => {
-                try {
-                    const response = await fetch('https://localhost:7017/api/resource/user');
-                    const data = await response.json();
-                    dispatch(updateUserResourceData({ dtos: data }));
-
-                } catch (error) {
-                    console.error('Error fetching cards:', error);
-                }
-            };
-
-
-            await fetchCards();
-            setLoadingCards(false);
-            await fetchBackground();
-            setLoadingBackground(false);
-            await fetchUser();
-            setLoadingUser(false);
         })()
     }, [])
 
@@ -143,15 +96,6 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         navigate('/lobbyHost')
     }
 
-
-    const divStyle: React.CSSProperties = {
-        backgroundImage: `url("data:image/png;base64, ${props.backgroundResourceData.menu.imageData}")`,
-        backgroundSize: 'cover',
-        backgroundPosition: 'center',
-        width: '100%',
-        height: '100%',
-    };
-
     const LoginClick = async () => {
         if (loginInfo.login != "" && loginInfo.password != "") {
             const response = await fetch("https://localhost:7017/jwt/login", {
@@ -187,35 +131,27 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     }
 
     return (
-        loadingBackground ?
-            <p>Загрузка заднего фона...</p> :
-            loadingUser ?
 
-                <p>Загрузка автарок игроков...</p> :
-
-                loadingCards ?
-                    <p>Загрузка карт...</p> :
-                    
-                    <div style={divStyle}>
-                        <Modal
-                            isOpen={modalIsOpen}
-                            onAfterOpen={afterOpenModal}
-                            onRequestClose={closeModal}
-                            contentLabel="Example Modal"
-                            ariaHideApp={false}
-                        >
-                            Login:
-                            <input autoComplete='on' placeholder='Логин' onChange={(e) => setLoginInfo({ ...loginInfo, login: e.target.value })}></input>
-                            Password:
-                            <input autoComplete='on' placeholder='Пароль' type='password' onChange={(e) => setLoginInfo({ ...loginInfo, password: e.target.value })}></input>
-                            <button onClick={() => LoginClick()}>Submit</button>
-                            <button onClick={() => register()}>REGISTER ME</button>
-                        </Modal>
-                        StartHost
-                        <button onClick={() => createLobby()}>
-                            Host game
-                        </button>
-                    </div>
+        <div>
+            <Modal
+                isOpen={modalIsOpen}
+                onAfterOpen={afterOpenModal}
+                onRequestClose={closeModal}
+                contentLabel="Example Modal"
+                ariaHideApp={false}
+            >
+                Login:
+                <input autoComplete='on' placeholder='Логин' onChange={(e) => setLoginInfo({ ...loginInfo, login: e.target.value })}></input>
+                Password:
+                <input autoComplete='on' placeholder='Пароль' type='password' onChange={(e) => setLoginInfo({ ...loginInfo, password: e.target.value })}></input>
+                <button onClick={() => LoginClick()}>Submit</button>
+                <button onClick={() => register()}>REGISTER ME</button>
+            </Modal>
+            StartHost
+            <button onClick={() => createLobby()}>
+                Host game
+            </button>
+        </div>
     )
 }
 
