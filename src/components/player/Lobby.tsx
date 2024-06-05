@@ -13,6 +13,7 @@ const mapState = (state: RootState) => (
         hubConnection: state.hubConnection.hubConnection,
         lobby: state.lobbyData,
         player: state.playerData,
+        backgroundResourceData: state.backgroundResourceData,
         userResourceData: state.userResourceData
     }
 )
@@ -37,9 +38,9 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     useEffect(() => {
         (() => {
             if (!hasPageBeenRendered.current["effect1"]) {
-                props.hubConnection?.on("GameStarted" + props.player.id, (playerHand: GameCard[]) => {
+                props.hubConnection?.on("GameStarted" + props.player.id, (playerHand:GameCard[]) => {
                     console.log("GameStarted", playerHand);
-                    dispatch(updatePlayerData({ ...props.player, cards: playerHand }));
+                    dispatch(updatePlayerData({...props.player, cards:playerHand }));
                     navigate('/gamePlayer');
                 })
             }
@@ -47,8 +48,16 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         })()
     }, []);
 
+    const divStyle: React.CSSProperties = {
+        backgroundImage: `url("data:image/png;base64, ${props.backgroundResourceData.menu.imageData}")`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        width: '100%',
+        height: '100%',
+    };
+    
     return (
-        <div>
+        <div style={divStyle}>
             {props.lobby.lobbyMembers.map((item: LobbyMember) => (
                 <div>name:{item.username}ready:{String(item.isReady)}</div>
             ))}

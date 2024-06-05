@@ -12,6 +12,7 @@ const mapState = (state: RootState) => (
     {
         hubConnection: state.hubConnection.hubConnection,
         lobby: state.lobbyData,
+        backgroundResourceData: state.backgroundResourceData,
         userResourceData: state.userResourceData,
         cardResourceData: state.cardResourceData
     }
@@ -50,8 +51,15 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
             hasPageBeenRendered.current["effect1"] = true
         })()
     }, []);
+    const divStyle: React.CSSProperties = {
+        backgroundImage: `url("data:image/png;base64, ${props.backgroundResourceData.menu.imageData}")`,
+        backgroundSize: 'cover',
+        backgroundPosition: 'center',
+        width: '100%',
+        height: '100%',
+    };
     return (
-        <div>
+        <div style={divStyle}>
             GameHost
             <div>SelectedCards:
 
