@@ -155,7 +155,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                         </input>
                         Image:
                         <div>
-                            {/* <img src={`url("data:image/png;base64, ${props.userResourceData.dtos[currentIndex].imageData}")`} alt={`UserIcon ${currentIndex + 1}`} /> */}
+                            <img src={`data:image/png;base64, ${props.userResourceData.dtos[currentIndex].imageData}`} alt={`UserIcon ${currentIndex + 1}`} />
                             
                             <div>
                                 <button onClick={showPreviousImage}>Назад</button>
