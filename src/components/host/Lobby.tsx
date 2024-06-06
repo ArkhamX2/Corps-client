@@ -55,12 +55,13 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         width: '100%',
-        height: '100%',
+        height: '100vh',
     };
     
     return (
         <div style={divStyle}>
             LobbyHost
+            {props.lobby.code}
             {props.lobby.lobbyMembers ?
                 props.lobby.lobbyMembers.map((item: LobbyMember) => (
                     <div>name:{item.username}ready:{String(item.isReady)}</div>

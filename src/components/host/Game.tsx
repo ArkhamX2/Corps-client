@@ -56,7 +56,7 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         backgroundSize: 'cover',
         backgroundPosition: 'center',
         width: '100%',
-        height: '100%',
+        height: '100vh',
     };
     return (
         <div style={divStyle}>
