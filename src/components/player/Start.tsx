@@ -65,7 +65,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                     const data = await response.json();
                     dispatch(updateUserResourceData({ dtos: data }));
                     console.log(data);
-                    
+
                 } catch (error) {
                     console.error('Error fetching cards:', error);
                 }
@@ -99,7 +99,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
             console.log("joined", lobby);
             if (!Flick) {
                 dispatch(updateHubConnection({ hubConnection: hubConnection }));
-                dispatch(updatePlayerData({ id: playerId, name: username }))
+                dispatch(updatePlayerData({ id: playerId, name: username, avatarId: props.userResourceData.dtos[currentIndex].id }))
                 navigate('/lobbyPlayer')
                 Flick = true
             }
@@ -107,7 +107,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
         hubConnection.start().finally(() => {
             if (hubConnection.state === signalR.HubConnectionState.Connected) {
-                hubConnection.invoke("JoinLobby", lobbyCode, username).catch(err => console.log(err))
+                hubConnection.invoke("JoinLobby", lobbyCode, username, props.userResourceData.dtos[currentIndex].id).catch(err => console.log(err))
             }
         }).catch(err => console.log(err))
     }
@@ -155,8 +155,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                         </input>
                         Image:
                         <div>
-                            <img src={`data:image/png;base64, ${props.userResourceData.dtos[currentIndex].imageData}`} alt={`UserIcon ${currentIndex + 1}`} />
-                            
+                            <img style={{ width: '150px', height: '150px' }} src={`data:image/png;base64, ${props.userResourceData.dtos[currentIndex].imageData}`} alt={`UserIcon ${currentIndex + 1}`} />
                             <div>
                                 <button onClick={showPreviousImage}>Назад</button>
                                 <button onClick={showNextImage}>Далее</button>

@@ -10,7 +10,8 @@ const initialState: playerData = {
 type playerData = {
     id?: number,
     name: string,
-    cards?: GameCard[]
+    cards?: GameCard[],
+    avatarId?: number
 }
 
 const playerDataSlice = createSlice({
@@ -21,6 +22,7 @@ const playerDataSlice = createSlice({
             state.id = action.payload.id;
             state.name = action.payload.name;
             state.cards = action.payload.cards;
+            state.avatarId = action.payload.avatarId;
         }
     },
     extraReducers: (builder) => {

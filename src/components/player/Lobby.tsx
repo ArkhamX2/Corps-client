@@ -59,7 +59,9 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     return (
         <div style={divStyle}>
             {props.lobby.lobbyMembers.map((item: LobbyMember) => (
-                <div>name:{item.username}ready:{String(item.isReady)}</div>
+                <div>name:{item.username}ready:{String(item.isReady)}
+                <img style={{ width: '150px', height: '150px' }} src={`data:image/png;base64, ${props.userResourceData.dtos.find(x => x.id === item.avatarId)!.imageData}`} alt={`UserIcon ${item.avatarId}`} />
+                </div>
             ))}
             <div>
                 <button onClick={() => Ready()}>READY</button>

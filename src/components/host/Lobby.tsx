@@ -13,7 +13,8 @@ const mapState = (state: RootState) => (
         hubConnection: state.hubConnection.hubConnection,
         lobby: state.lobbyData,
         logged: state.accountStateData.logged,
-        backgroundResourceData: state.backgroundResourceData
+        backgroundResourceData: state.backgroundResourceData,
+        userResourceData: state.userResourceData
     }
 )
 
@@ -33,12 +34,11 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
     const StartGame = () => {
         var allReady = 0
-        props.lobby.lobbyMembers.map((player)=>{
-            if(player.isReady==true)
-                allReady+=1
+        props.lobby.lobbyMembers.map((player) => {
+            if (player.isReady == true)
+                allReady += 1
         })
-        if (allReady==props.lobby.lobbyMembers.length && allReady != 0)
-        {
+        if (allReady == props.lobby.lobbyMembers.length && allReady != 0) {
             console.log(props.lobby);
             console.log(props.hubConnection);
             console.log("invoked");
@@ -57,14 +57,19 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         width: '100%',
         height: '100vh',
     };
-    
+
     return (
         <div style={divStyle}>
             LobbyHost
             {props.lobby.code}
             {props.lobby.lobbyMembers ?
                 props.lobby.lobbyMembers.map((item: LobbyMember) => (
-                    <div>name:{item.username}ready:{String(item.isReady)}</div>
+                    <div>
+                        name:{item.username}
+                        ready:{String(item.isReady)}
+                        <img style={{ width: '150px', height: '150px' }} src={`data:image/png;base64, ${props.userResourceData.dtos.find(x => x.id === item.avatarId)!.imageData}`} alt={`UserIcon ${item.avatarId}`} />
+                    </div>
+
                 )) : <></>}
             <div>
                 <button onClick={() => StartGame()}>StartGame</button>
