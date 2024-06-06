@@ -67,10 +67,10 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                     <div>
                         playerId: {i}
                         {selectedCards.filter((card) => card.playerId === i).map((card) => {
-                            const cardInfo = props.cardResourceData.dtos.filter((x) => x.Id == card.selectedCard.id)[0];
+                            const cardInfo = props.cardResourceData.dtos.filter((x) => x.id == card.selectedCard.id)[0];
                             return (<div style={
                                 {
-                                    backgroundImage: `url("data:imageFpng;base64, ${cardInfo.Background}")`,
+                                    backgroundImage: `url("data:imageFpng;base64, ${cardInfo.background}")`,
                                     backgroundSize: 'cover',
                                     backgroundPosition: 'center',
                                     width: '100%',
@@ -81,9 +81,9 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                                     selectedCardId: {card.selectedCard.id} selectedCardState: {card.selectedCard.state}
                                 </div>
                                 cardId: {card.selectedCard.id}
-                                title: {cardInfo.Info.Title} {cardInfo.Info.Power}
-                                description: {cardInfo.Info.Description}
-                                direction: {cardInfo.Info.Direction}
+                                title: {cardInfo.info.title} {cardInfo.info.power}
+                                description: {cardInfo.info.description}
+                                direction: {cardInfo.info.direction}
                             </div>)
                         }
                         )}

@@ -1,15 +1,15 @@
 
 export interface CardDTO {
-    Id: number;
-    Type: string;
-    Background: string;
-    Icon: string;
-    Info: CardInfoDTO;
+    id: number;
+    type: string;
+    background: string;
+    icon: string;
+    info: CardInfoDTO;
 }
 
 export interface CardInfoDTO {
-    Title: string;
-    Description: string;
-    Direction: string;
-    Power: number | null;
+    title: string;
+    description: string;
+    direction: string;
+    power: number | null;
 }

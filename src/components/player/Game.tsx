@@ -3,6 +3,7 @@ import { RootState } from '../../store'
 import { ConnectedProps, connect } from 'react-redux'
 import { CardState, GameCard } from '../../types/game'
 import { useAppDispatch } from '../../utility/hook'
+import { CardDTO } from '../../types/cardDTO'
 const mapState = (state: RootState) => (
     {
         hubConnection: state.hubConnection.hubConnection,
@@ -15,6 +16,8 @@ const mapState = (state: RootState) => (
 )
 
 type PropsFromRedux = ConnectedProps<typeof connector>
+
+
 
 const connector = connect(mapState)
 
@@ -49,6 +52,10 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     const selectCard = (selectedCardId: number) => {
         props.hubConnection?.invoke("SelectCard", props.lobby.id, props.player.id, selectedCardId).catch((err: any) => console.log(err))
     }
+    
+    function findCardById(cardId: number): CardDTO | undefined {
+        return props.cardResourceData.dtos.find(card => card.id === cardId);
+    }
 
     const divStyle: React.CSSProperties = {
         backgroundImage: `url("data:image/png;base64, ${props.backgroundResourceData.menu.imageData}")`,
@@ -64,22 +71,25 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
             <div>
                 Cardbox
                 {props.player.cards?.map((card) => {
-                    const cardInfo = props.cardResourceData.dtos.filter((x) => x.Id == card.id)[0];
-                    return (<div style={
-                        {
-                            backgroundImage: `url("data:imageFpng;base64, ${cardInfo.Background}")`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            width: '100%',
-                            height: '100%',
-                        }
-                    }>
-                        cardId: {card.id}
-                        title: {cardInfo.Info.Title} {cardInfo.Info.Power}
-                        description: {cardInfo.Info.Description}
-                        direction: {cardInfo.Info.Direction}
-                        <button onClick={() => selectCard(card.id)}>SELECT</button>
-                    </div>)
+                    const cardInfo = findCardById(card.id);
+                    return (
+
+                        cardInfo !== undefined ?
+                            <div style={
+                                {
+                                    backgroundImage: `url("data:imageFpng;base64, ${cardInfo.background}")`,
+                                    backgroundSize: 'cover',
+                                    backgroundPosition: 'center',
+                                    width: '100%',
+                                    height: '100%',
+                                }
+                            }>
+                                cardId: {card.id}
+                                title: {cardInfo.info.title} {cardInfo.info.power}
+                                description: {cardInfo.info.description}
+                                direction: {cardInfo.info.direction}
+                                <button onClick={() => selectCard(card.id)}>SELECT</button>
+                            </div> : <></>)
                 }
 
                 )}
@@ -87,10 +97,12 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
             <div>
                 Selectbox
                 {selectedCards.map((card) => {
-                    const cardInfo = props.cardResourceData.dtos.filter((x) => x.Id == card.id)[0];
-                    return (<div style={
+                    const cardInfo = findCardById(card.id);
+                    return (
+                    cardInfo !== undefined ?
+                    <div style={
                         {
-                            backgroundImage: `url("data:imageFpng;base64, ${cardInfo.Background}")`,
+                            backgroundImage: `url("data:imageFpng;base64, ${cardInfo.background}")`,
                             backgroundSize: 'cover',
                             backgroundPosition: 'center',
                             width: '100%',
@@ -98,11 +110,11 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                         }
                     }>
                         cardId: {card.id} cardState: {card.state}
-                        title: {cardInfo.Info.Title} {cardInfo.Info.Power}
-                        description: {cardInfo.Info.Description}
-                        direction: {cardInfo.Info.Direction}
+                        title: {cardInfo.info.title} {cardInfo.info.power}
+                        description: {cardInfo.info.description}
+                        direction: {cardInfo.info.direction}
                         <button onClick={() => selectCard(card.id)}>UNSELECT</button>
-                    </div>)
+                    </div>:<></>)
                 }
                 )}
             </div>
