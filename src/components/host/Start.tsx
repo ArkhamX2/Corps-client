@@ -150,6 +150,8 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         backgroundPosition: 'center',
         width: '100%',
         height: '100vh',
+        fontSize:'40px',
+        color: '#FFFFFF'
     };
 
     const LoginClick = async () => {

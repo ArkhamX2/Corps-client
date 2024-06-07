@@ -63,6 +63,8 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         backgroundPosition: 'center',
         width: '100%',
         height: '100vh',
+        fontSize:'40px',
+        color: '#FFFFFF'
     };
 
     return (
@@ -82,6 +84,8 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                                     backgroundPosition: 'center',
                                     width: '100%',
                                     height: '100%',
+                                    fontSize:'20px',
+                                    color: '#000000'
                                 }
                             }>
                                 cardId: {card.id}
