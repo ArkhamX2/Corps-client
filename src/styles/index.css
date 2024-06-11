@@ -1,1 +1,11 @@
 @import url(./reset.css);
+@import url(./start_host.css);
+
+@font-face {
+    font-family: 'Jura';
+    src: url('../fonts/Jura-Bold.ttf') format('truetype');
+}
+@font-face {
+    font-family: 'JetBrainsMono';
+    src: url('../fonts/JetBrainsMono-Regular.ttf') format('truetype');
+}

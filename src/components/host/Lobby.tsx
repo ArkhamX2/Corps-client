@@ -7,6 +7,7 @@ import { LobbyMember, LobbyType } from '../../types/lobby'
 import { useAppDispatch } from '../../utility/hook';
 import { updateLobbyData } from '../../store/lobbyDataSlice';
 import { useNavigate } from 'react-router-dom';
+import labelImage from '../../resource/image/CORPS.png';
 import { updateBackgroundResourceData } from '../../store/backgroundResourceSlice';
 const mapState = (state: RootState) => (
     {
@@ -57,12 +58,17 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         width: '100%',
         height: '100vh',
         fontSize:'40px',
-        color: '#FFFFFF'
+        color: '#FFFFFF',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
     };
 
     return (
         <div style={divStyle}>
-            LobbyHost
+            <img src={labelImage} alt="CORPS" style={{ margin: '10px' }}></img>
+                            
             {props.lobby.code}
             {props.lobby.lobbyMembers ?
                 props.lobby.lobbyMembers.map((item: LobbyMember) => (
