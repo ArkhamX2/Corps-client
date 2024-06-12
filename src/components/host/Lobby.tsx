@@ -7,6 +7,8 @@ import { LobbyMember, LobbyType } from '../../types/lobby'
 import { useAppDispatch } from '../../utility/hook';
 import { updateLobbyData } from '../../store/lobbyDataSlice';
 import { useNavigate } from 'react-router-dom';
+import labelImage from '../../resource/image/CORPS.png';
+import qrImage from '../../resource/image/qr-code.png';
 import { updateBackgroundResourceData } from '../../store/backgroundResourceSlice';
 const mapState = (state: RootState) => (
     {
@@ -56,26 +58,40 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         backgroundPosition: 'center',
         width: '100%',
         height: '100vh',
-        fontSize:'40px',
-        color: '#FFFFFF'
+        fontSize: '40px',
+        color: '#FFFFFF',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
     };
 
     return (
         <div style={divStyle}>
-            LobbyHost
-            {props.lobby.code}
-            {props.lobby.lobbyMembers ?
-                props.lobby.lobbyMembers.map((item: LobbyMember) => (
+            <img src={labelImage} alt="CORPS" style={{ margin: '10px' }}></img>
+            <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center'}}>
+                <div>
+                    <img src={qrImage} alt="QR CODE" style={{ margin: '10px', width: '300px', height: '300px' }}/>
+                </div>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }} >
+                    <span>КОД: {props.lobby.code}</span>
                     <div>
-                        name:{item.username}
-                        ready:{String(item.isReady)}
-                        <img style={{ width: '150px', height: '150px' }} src={`data:image/png;base64, ${props.userResourceData.dtos.find(x => x.id === item.avatarId)!.imageData}`} alt={`UserIcon ${item.avatarId}`} />
+                        <button onClick={() => StartGame()}>StartGame</button>
+                        <button onClick={() => TestConnection()}>TestConnection</button>
                     </div>
+                </div>
 
-                )) : <></>}
-            <div>
-                <button onClick={() => StartGame()}>StartGame</button>
-                <button onClick={() => TestConnection()}>TestConnection</button>
+                {props.lobby.lobbyMembers ?
+                    props.lobby.lobbyMembers.map((item: LobbyMember) => (
+                        <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
+                            <img style={{ width: '150px', height: '150px' }} src={`data:image/png;base64, ${props.userResourceData.dtos.find(x => x.id === item.avatarId)!.imageData}`} alt={`UserIcon ${item.avatarId}`} />
+                            {item.username}
+                            {String(item.isReady)}
+                        </div>
+
+                    )) : <></>}
+            </div>
             </div>
         </div>
     )

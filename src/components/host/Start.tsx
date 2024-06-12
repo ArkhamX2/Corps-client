@@ -13,7 +13,8 @@ import { updateHubConnection } from '../../store/hubConnectionSlice';
 import { updateCardResourceData } from '../../store/cardResourceSlice';
 import { updateBackgroundResourceData } from '../../store/backgroundResourceSlice';
 import { updateUserResourceData } from '../../store/userResourceSlice';
-import { fetchCards, fetchBackground, fetchUser } from '../../utility/fetch';
+import labelImage from '../../resource/image/CORPS.png';
+import '../../styles/index.css'
 
 const mapState = (state: RootState) => (
     {
@@ -150,8 +151,12 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         backgroundPosition: 'center',
         width: '100%',
         height: '100vh',
-        fontSize:'40px',
-        color: '#FFFFFF'
+        fontSize: '40px',
+        color: '#FFFFFF',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
     };
 
     const LoginClick = async () => {
@@ -197,7 +202,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
                 loadingCards ?
                     <p>Загрузка карт...</p> :
-                    
+
                     <div style={divStyle}>
                         <Modal
                             isOpen={modalIsOpen}
@@ -213,10 +218,18 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                             <button onClick={() => LoginClick()}>Submit</button>
                             <button onClick={() => register()}>REGISTER ME</button>
                         </Modal>
-                        StartHost
-                        <button onClick={() => createLobby()}>
-                            Host game
-                        </button>
+
+                        <div className="container">
+                            <img src={labelImage} alt="CORPS" style={{ margin: '10px' }}></img>
+                            <div className="box" >
+                                <p className='box-text'>{"Игра будет отображаться на этом экране."}</p>
+                                <p className='box-text'>{"Делай ходы на телефоне и наблюдай за развитием событий на большом экране."} </p>
+                            </div>
+                            <button className='start-button' onClick={() => createLobby()}>
+                                СОЗДАТЬ КОМНАТУ
+                            </button>
+
+                        </div>
                     </div>
     )
 }

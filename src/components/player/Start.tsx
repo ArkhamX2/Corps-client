@@ -119,7 +119,11 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         width: '100%',
         height: '100vh',
         fontSize:'40px',
-        color: '#FFFFFF'
+        color: '#FFFFFF',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
     };
 
     const [currentIndex, setCurrentIndex] = useState(0);
