@@ -16,6 +16,8 @@ import { updateUserResourceData } from '../../store/userResourceSlice';
 import labelImage from '../../resource/image/CORPS.png';
 import '../../styles/index.css'
 
+const serverIp = '172.30.87.103'
+
 const mapState = (state: RootState) => (
     {
         backgroundResourceData: state.backgroundResourceData,
@@ -42,7 +44,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
             const fetchCards = async () => {
                 try {
-                    const response = await fetch('https://localhost:7017/api/resource/card');
+                    const response = await fetch('http://'+serverIp+':7017/api/resource/card');
                     const data = await response.json();
                     dispatch(updateCardResourceData({ dtos: data }));
                 } catch (error) {
@@ -52,7 +54,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
             const fetchBackground = async () => {
                 try {
-                    const response = await fetch('https://localhost:7017/api/resource/background');
+                    const response = await fetch('http://'+serverIp+':7017/api/resource/background');
                     const data = await response.json();
                     dispatch(updateBackgroundResourceData({ menu: data[1], board: data[0] }));
                 } catch (error) {
@@ -62,7 +64,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
             const fetchUser = async () => {
                 try {
-                    const response = await fetch('https://localhost:7017/api/resource/user');
+                    const response = await fetch('http://'+serverIp+':7017/api/resource/user');
                     const data = await response.json();
                     dispatch(updateUserResourceData({ dtos: data }));
 
@@ -110,7 +112,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
     const connectToHub = async () => {
         const hubConnection = new signalR.HubConnectionBuilder()
-            .withUrl("https://localhost:7017/game", { accessTokenFactory: () => getToken()!.value })
+            .withUrl('http://'+serverIp+':7017/game', { accessTokenFactory: () => getToken()!.value })
             .build()
 
         hubConnection.on("CreateSuccess", (lobby: LobbyType) => {
@@ -182,7 +184,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     }
 
     const register = async () => {
-        const response = await fetch("https://localhost:7017/jwt/register", {
+        const response = await fetch('http://'+serverIp+':7017/jwt/register', {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
