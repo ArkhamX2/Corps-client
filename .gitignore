@@ -22,3 +22,6 @@ dist-ssr
 *.njsproj
 *.sln
 *.sw?
+hostIp.txt
+serverIp.txt
+test.txt
