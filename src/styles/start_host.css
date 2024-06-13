@@ -35,8 +35,10 @@
 }
 
 .custom-scroll {
-    max-height: 450px;
+    max-height: 365px;
+    max-width: 600px;
     overflow-y: auto;
+    overflow-x: hidden;
     scrollbar-width: thin;
     scrollbar-color: #242587 #ffffff;
 }

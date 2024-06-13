@@ -7,6 +7,8 @@ import { useNavigate } from 'react-router-dom'
 import { useAppDispatch } from '../../utility/hook'
 import { updatePlayerData } from '../../store/playerDataSlice'
 import { GameCard } from '../../types/game'
+import UserItem from '../UI/UserItem'
+import labelImage from '../../resource/image/CORPS.png';
 
 const mapState = (state: RootState) => (
     {
@@ -38,9 +40,9 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     useEffect(() => {
         (() => {
             if (!hasPageBeenRendered.current["effect1"]) {
-                props.hubConnection?.on("GameStarted" + props.player.id, (playerHand:GameCard[]) => {
+                props.hubConnection?.on("GameStarted" + props.player.id, (playerHand: GameCard[]) => {
                     console.log("GameStarted", playerHand);
-                    dispatch(updatePlayerData({...props.player, cards:playerHand }));
+                    dispatch(updatePlayerData({ ...props.player, cards: playerHand }));
                     navigate('/gamePlayer');
                 })
             }
@@ -54,20 +56,32 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         backgroundPosition: 'center',
         width: '100%',
         height: '100vh',
-        fontSize:'40px',
-        color: '#FFFFFF'
+        fontSize: '40px',
+        color: '#FFFFFF',
+        display: 'flex',
+        flexDirection: 'column',
+        alignItems: 'center',
+        justifyContent: 'center',
     };
-    
+
     return (
         <div style={divStyle}>
-            {props.lobby.lobbyMembers.map((item: LobbyMember) => (
-                <div>name:{item.username}ready:{String(item.isReady)}
-                <img style={{ width: '150px', height: '150px' }} src={`data:image/png;base64, ${props.userResourceData.dtos.find(x => x.id === item.avatarId)!.imageData}`} alt={`UserIcon ${item.avatarId}`} />
+            <img src={labelImage} alt="CORPS" style={{ margin: '10px', marginBottom: "20px" }}></img>
+            <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }} >
+                    <div>
+                        <button className='start-button' style={{ fontSize: '25px', textAlign:'center', width: '300px', height: '70px' }} onClick={() => Ready()}>Готов</button>
+                    </div>
                 </div>
-            ))}
-            <div>
-                <button onClick={() => Ready()}>READY</button>
-                <button onClick={() => TestConnection()}>TestConnection</button>
+                {props.lobby.lobbyMembers.length != 0 ?
+                    <div className="box" style={{margin:'20px' }}>
+                        <div className='custom-scroll' style={{ margin: '10px' }}>
+                            {props.lobby.lobbyMembers ?
+                                props.lobby.lobbyMembers.map((item: LobbyMember) => (
+                                    <UserItem userData={props.userResourceData.dtos} item={item} style={{ marginTop: '10px', width:'650px' }} />
+                                )) : <></>}
+                        </div>
+                    </div> : <></>}
             </div>
         </div>
     )

@@ -11,6 +11,8 @@ import { LobbyType } from '../../types/lobby';
 import { updateBackgroundResourceData } from '../../store/backgroundResourceSlice';
 import { updateCardResourceData } from '../../store/cardResourceSlice';
 import { updateUserResourceData } from '../../store/userResourceSlice';
+import labelImage from '../../resource/image/CORPS.png';
+import '../../styles/index.css'
 
 const serverIp = 'localhost'
 
@@ -43,7 +45,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
             const fetchCards = async () => {
                 try {
-                    const response = await fetch('http://'+serverIp+':5228/api/resource/card');
+                    const response = await fetch('http://' + serverIp + ':5228/api/resource/card');
                     const data = await response.json();
                     dispatch(updateCardResourceData({ dtos: data }));
                 } catch (error) {
@@ -53,7 +55,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
             const fetchBackground = async () => {
                 try {
-                    const response = await fetch('http://'+serverIp+':5228/api/resource/background');
+                    const response = await fetch('http://' + serverIp + ':5228/api/resource/background');
                     const data = await response.json();
                     dispatch(updateBackgroundResourceData({ menu: data[1], board: data[0] }));
                 } catch (error) {
@@ -63,7 +65,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
             const fetchUser = async () => {
                 try {
-                    const response = await fetch('http://'+serverIp+':5228/api/resource/user');
+                    const response = await fetch('http://' + serverIp + ':5228/api/resource/user');
                     const data = await response.json();
                     dispatch(updateUserResourceData({ dtos: data }));
                     console.log(data);
@@ -84,7 +86,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
     const connectToHub = () => {
         const hubConnection = new signalR.HubConnectionBuilder()
-            .withUrl('http://'+serverIp+':5228/game')
+            .withUrl('http://' + serverIp + ':5228/game')
             .build()
 
         hubConnection.on("PlayerJoined", (lobby: LobbyType) => {
@@ -120,7 +122,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         backgroundPosition: 'center',
         width: '100%',
         height: '100vh',
-        fontSize:'40px',
+        fontSize: '40px',
         color: '#FFFFFF',
         display: 'flex',
         flexDirection: 'column',
@@ -154,24 +156,27 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                     <p>Загрузка карт...</p> :
 
                     <div style={divStyle}>
-                        StartPlayer
-                        Name:
-                        <input value={username} onChange={e => setUsername(e.target.value)} >
-                        </input>
-                        Game:
-                        <input value={lobbyCode} onChange={e => setLobbyCode(e.target.value)}>
-                        </input>
-                        Image:
-                        <div>
-                            <img style={{ width: '150px', height: '150px' }} src={`data:image/png;base64, ${props.userResourceData.dtos[currentIndex].imageData}`} alt={`UserIcon ${currentIndex + 1}`} />
-                            <div>
+                        <div className="container" style={{width:'100%'}}>
+                            <img src={labelImage} alt="CORPS" style={{ margin: '10px', marginBottom: '40px' }}></img>
+                            <div className="box" style={{ width: '300px', marginTop: '20px' }}>
+                                <input style={{ border: 'none', outline: 'none', width: '100%' }} value={username} placeholder='Псевдоним' onChange={e => setUsername(e.target.value)} >
+                                </input>
+                            </div>
+                            <div className="box" style={{ width: '300px', marginTop: '20px' }}>
+                                <input style={{ border: 'none', outline: 'none', width: '100%' }} value={lobbyCode} placeholder='Код игры' onChange={e => setLobbyCode(e.target.value)}>
+                                </input>
+                            </div>
+                            <div style={{ width:'100%', display: 'flex', flexDirection: 'row', marginTop: '20px', alignItems: 'center', justifyContent: 'space-evenly' }}>
                                 <button onClick={showPreviousImage}>Назад</button>
+                                <img style={{ width: '70px', height: '70px' }} src={`data:image/png;base64, ${props.userResourceData.dtos[currentIndex].imageData}`} alt={`UserIcon ${currentIndex + 1}`} />
                                 <button onClick={showNextImage}>Далее</button>
                             </div>
+                            <button className='start-button' style={{ fontSize: '25px', marginTop: '40px', width: '300px', height: '70px' }} onClick={() => connectToHub()}>
+                                <span style={{ margin: '46px 22px' }}>Присоединиться</span>
+                            </button>
+
                         </div>
-                        <button onClick={() => connectToHub()}>
-                            Connect to game
-                        </button>
+
                     </div>
     )
 }

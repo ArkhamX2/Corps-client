@@ -74,15 +74,15 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
             <img src={labelImage} alt="CORPS" style={{ margin: '10px', marginBottom:"60px" }}></img>
             <div style={{ display: 'flex', width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-evenly' }}>
                 <div>
-                    <img src={qrImage} alt="QR CODE" style={{ margin: '10px', width: '566px', height: '566px' }} />
+                    <img src={qrImage} alt="QR CODE" style={{ margin: '10px', width: '400px', height: '400px' }} />
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', margin: "10px" }}>
+                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }} >
-                        <div className="box" style={{height:'140px', display:'flex', alignItems:'center', marginRight:'20px'}}>
+                        <div className="box" style={{height:'100px', display:'flex', alignItems:'center', marginRight:'20px'}}>
                             <span style={{ color: '#242587', fontSize:'60px', margin:'24px 48px'}}>КОД: {props.lobby.code.substring(0,3)}-{props.lobby.code.substring(3)}</span>
                         </div>
                         <div>
-                            <button className='start-button' style={{width:'277px', height:'140px', fontSize:'60px', textAlign:'center'}} onClick={() => StartGame()}>СТАРТ</button>
+                            <button className='start-button' style={{width:'277px', height:'100px', fontSize:'60px', textAlign:'center'}} onClick={() => StartGame()}>СТАРТ</button>
                         </div>
                     </div>
                     {props.lobby.lobbyMembers.length != 0 ?
