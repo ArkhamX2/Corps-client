@@ -12,6 +12,7 @@ import qrImage from '../../resource/image/qr-code.png';
 import readyImage from '../../resource/image/ready.png';
 import '../../styles/index.css'
 import { updateBackgroundResourceData } from '../../store/backgroundResourceSlice';
+import UserItem from '../UI/UserItem';
 const mapState = (state: RootState) => (
     {
         hubConnection: state.hubConnection.hubConnection,
@@ -70,32 +71,28 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
     return (
         <div style={divStyle}>
-            <img src={labelImage} alt="CORPS" style={{ margin: '10px' }}></img>
-            <button onClick={() => TestConnection()}>TestConnection</button>
+            <img src={labelImage} alt="CORPS" style={{ margin: '10px', marginBottom:"60px" }}></img>
             <div style={{ display: 'flex', width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-evenly' }}>
                 <div>
-                    <img src={qrImage} alt="QR CODE" style={{ margin: '10px', width: '300px', height: '300px' }} />
+                    <img src={qrImage} alt="QR CODE" style={{ margin: '10px', width: '566px', height: '566px' }} />
                 </div>
                 <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center', margin: "10px" }}>
                     <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }} >
-                        <div className="box" >
-                            <span style={{ color: '#242587'}}>КОД: {props.lobby.code}</span>
+                        <div className="box" style={{height:'140px',marginLeft:'0px', display:'flex', alignItems:'center'}}>
+                            <span style={{ color: '#242587', fontSize:'60px', margin:'24px 48px'}}>КОД: {props.lobby.code.substring(0,3)}-{props.lobby.code.substring(3)}</span>
                         </div>
                         <div>
-                            <button className='start-button' onClick={() => StartGame()}>СТАРТ</button>
+                            <button className='start-button' style={{width:'277px', height:'140px', fontSize:'60px', textAlign:'center', marginRight:'0px'}} onClick={() => StartGame()}>СТАРТ</button>
                         </div>
                     </div>
                     {props.lobby.lobbyMembers.length != 0 ?
-                        <div className="box" >
+                        <div className="box" style={{ width:'100%'}}>
+                            <div style={{margin:'30px 48px'}}>
                             {props.lobby.lobbyMembers ?
                                 props.lobby.lobbyMembers.map((item: LobbyMember) => (
-                                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }}>
-                                        <img style={{ width: '150px', height: '150px' }} src={`data:image/png;base64, ${props.userResourceData.dtos.find(x => x.id === item.avatarId)!.imageData}`} alt={`UserIcon ${item.avatarId}`} />
-                                        {item.isReady ? <img src={readyImage} alt="QR CODE" style={{ margin: '0px 20px -100px -20px', width: '40px', height: '40px' }} /> : <></>}
-                                        <span style={{ color: '#242587' }}>{item.username.toUpperCase()}</span>
-                                    </div>
-
+                                    <UserItem userData = {props.userResourceData.dtos} item = {item} style={{marginTop:'10px'}}/>
                                 )) : <></>}
+                                </div>
                         </div> : <></>}
                 </div>
             </div>
@@ -104,3 +101,4 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 }
 
 export default connector(Lobby)
+

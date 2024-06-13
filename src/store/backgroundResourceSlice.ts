@@ -3,11 +3,13 @@ import { Image, ImageType } from '../types/imageDTO';
 
 const initialState:backgroundResourceStateData = {
     menu:{
+        id: 0,
         name:"",
         imageData:"",
         type:ImageType.Menu
     },
     board:{
+        id: 0,
         name:"",
         imageData:"",
         type:ImageType.Board

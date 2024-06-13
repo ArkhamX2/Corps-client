@@ -16,7 +16,7 @@ import { updateUserResourceData } from '../../store/userResourceSlice';
 import labelImage from '../../resource/image/CORPS.png';
 import '../../styles/index.css'
 
-const serverIp = 'IP'
+const serverIp = 'localhost'
 
 const mapState = (state: RootState) => (
     {
@@ -44,7 +44,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
             const fetchCards = async () => {
                 try {
-                    const response = await fetch('http://'+serverIp+':7017/api/resource/card');
+                    const response = await fetch('http://'+serverIp+':5228/api/resource/card');
                     const data = await response.json();
                     dispatch(updateCardResourceData({ dtos: data }));
                 } catch (error) {
@@ -54,7 +54,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
             const fetchBackground = async () => {
                 try {
-                    const response = await fetch('http://'+serverIp+':7017/api/resource/background');
+                    const response = await fetch('http://'+serverIp+':5228/api/resource/background');
                     const data = await response.json();
                     dispatch(updateBackgroundResourceData({ menu: data[1], board: data[0] }));
                 } catch (error) {
@@ -64,7 +64,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
             const fetchUser = async () => {
                 try {
-                    const response = await fetch('http://'+serverIp+':7017/api/resource/user');
+                    const response = await fetch('http://'+serverIp+':5228/api/resource/user');
                     const data = await response.json();
                     dispatch(updateUserResourceData({ dtos: data }));
 
@@ -112,7 +112,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
     const connectToHub = async () => {
         const hubConnection = new signalR.HubConnectionBuilder()
-            .withUrl('http://'+serverIp+':7017/game', { accessTokenFactory: () => getToken()!.value })
+            .withUrl('http://'+serverIp+':5228/game', { accessTokenFactory: () => getToken()!.value })
             .build()
 
         hubConnection.on("CreateSuccess", (lobby: LobbyType) => {
@@ -163,7 +163,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
     const LoginClick = async () => {
         if (loginInfo.login != "" && loginInfo.password != "") {
-            const response = await fetch("https://'+serverIp+':7017/jwt/login", {
+            const response = await fetch('http://'+serverIp+':5228/jwt/login', {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({
@@ -184,7 +184,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     }
 
     const register = async () => {
-        const response = await fetch('http://'+serverIp+':7017/jwt/register', {
+        const response = await fetch('http://'+serverIp+':5228/jwt/register', {
             method: "POST",
             headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
@@ -222,13 +222,13 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                         </Modal>
 
                         <div className="container">
-                            <img src={labelImage} alt="CORPS" style={{ margin: '10px' }}></img>
+                            <img src={labelImage} alt="CORPS" style={{ margin: '10px', marginBottom:'74px' }}></img>
                             <div className="box" >
                                 <p className='box-text'>{"Игра будет отображаться на этом экране."}</p>
                                 <p className='box-text'>{"Делай ходы на телефоне и наблюдай за развитием событий на большом экране."} </p>
                             </div>
-                            <button className='start-button' onClick={() => createLobby()}>
-                                СОЗДАТЬ КОМНАТУ
+                            <button className='start-button' style={{fontSize:'60px', marginTop:'74px', width:'740px', height:'140px'}} onClick={() => createLobby()}>
+                                <span style={{margin:'46px 22px'}}> СОЗДАТЬ КОМНАТУ</span>
                             </button>
 
                         </div>
