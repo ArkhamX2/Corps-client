@@ -16,7 +16,7 @@ import { updateUserResourceData } from '../../store/userResourceSlice';
 import labelImage from '../../resource/image/CORPS.png';
 import '../../styles/index.css'
 
-const serverIp = '172.30.87.103'
+const serverIp = 'IP'
 
 const mapState = (state: RootState) => (
     {
@@ -163,7 +163,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
     const LoginClick = async () => {
         if (loginInfo.login != "" && loginInfo.password != "") {
-            const response = await fetch("https://localhost:7017/jwt/login", {
+            const response = await fetch("https://'+serverIp+':7017/jwt/login", {
                 method: "POST",
                 headers: { "Content-Type": "application/json" },
                 body: JSON.stringify({

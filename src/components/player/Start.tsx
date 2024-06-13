@@ -12,7 +12,7 @@ import { updateBackgroundResourceData } from '../../store/backgroundResourceSlic
 import { updateCardResourceData } from '../../store/cardResourceSlice';
 import { updateUserResourceData } from '../../store/userResourceSlice';
 
-const serverIp = '172.30.87.103'
+const serverIp = 'IP'
 
 const mapState = (state: RootState) => (
     {
