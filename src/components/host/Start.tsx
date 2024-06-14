@@ -221,13 +221,13 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                             <button onClick={() => register()}>REGISTER ME</button>
                         </Modal>
 
-                        <div className="container">
+                        <div className="container-host">
                             <img src={labelImage} alt="CORPS" style={{ margin: '10px', marginBottom:'74px' }}></img>
-                            <div className="box" >
-                                <p className='box-text'>{"Игра будет отображаться на этом экране."}</p>
-                                <p className='box-text'>{"Делай ходы на телефоне и наблюдай за развитием событий на большом экране."} </p>
+                            <div className="box-host" >
+                                <p className='box-host-text'>{"Игра будет отображаться на этом экране."}</p>
+                                <p className='box-host-text'>{"Делай ходы на телефоне и наблюдай за развитием событий на большом экране."} </p>
                             </div>
-                            <button className='start-button' style={{fontSize:'60px', marginTop:'74px', width:'740px', height:'140px'}} onClick={() => createLobby()}>
+                            <button className='start-host-button' style={{fontSize:'60px', marginTop:'74px', width:'740px', height:'140px'}} onClick={() => createLobby()}>
                                 <span style={{margin:'46px 22px'}}> СОЗДАТЬ КОМНАТУ</span>
                             </button>
 

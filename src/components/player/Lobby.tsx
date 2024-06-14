@@ -10,6 +10,7 @@ import { GameCard } from '../../types/game'
 import UserItem from '../UI/UserItem'
 import labelImage from '../../resource/image/CORPS.png';
 
+import ghostImage from '../../resource/image/ghost-sign.png'
 const mapState = (state: RootState) => (
     {
         hubConnection: state.hubConnection.hubConnection,
@@ -68,17 +69,20 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         <div style={divStyle}>
             <img src={labelImage} alt="CORPS" style={{ margin: '10px', marginBottom: "20px" }}></img>
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
-                <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }} >
-                    <div>
-                        <button className='start-button' style={{ fontSize: '25px', textAlign:'center', width: '300px', height: '70px' }} onClick={() => Ready()}>Готов</button>
+                
+                <div style={{width:'100%', display:'flex',flexDirection:'row', justifyContent:'space-between',alignItems:'center'}}>
+                        <div style={{display:'flex', margin:'0px 10px',flexDirection:'row', justifyContent:'center',alignItems:'center'}}>
+                            <img src={ghostImage} alt="ghost-sign" />
+                            <span>{props.lobby.lobbyMembers.filter(x=>x.isReady).length}/{props.lobby.lobbyMembers.length}</span>
+                            </div>
+                            <button className='start-player-button' style={{ fontSize: '25px', textAlign:'center', width: '200px', height: '50px' }} onClick={() => Ready()}>Готов</button>
                     </div>
-                </div>
                 {props.lobby.lobbyMembers.length != 0 ?
-                    <div className="box" style={{margin:'20px' }}>
-                        <div className='custom-scroll' style={{ margin: '10px' }}>
+                    <div className="lobby-members-container-player" style={{margin:'10px' }}>
+                        <div className='user-container-player' style={{ margin: '10px' }}>
                             {props.lobby.lobbyMembers ?
                                 props.lobby.lobbyMembers.map((item: LobbyMember) => (
-                                    <UserItem userData={props.userResourceData.dtos} item={item} style={{ marginTop: '10px', width:'650px' }} />
+                                    <UserItem userData={props.userResourceData.dtos} imageSize={60} item={item} style={{ marginTop: '5px', width:'300px', fontSize:'25px' }} />
                                 )) : <></>}
                         </div>
                     </div> : <></>}

@@ -74,56 +74,39 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     return (
         <div style={divStyle}>
             GamePlayer
-            <div>
+            <div style={{display:'flex',flexDirection:'row'}}>
                 Cardbox
                 {props.player.cards?.map((card) => {
                     const cardInfo = findCardById(card.id);
                     return (
 
                         cardInfo !== undefined ?
-                            <div style={
+                            <div onClick={() => selectCard(card.id)} style={
                                 {
                                     backgroundImage: `url("data:imageFpng;base64, ${cardInfo.background}")`,
                                     backgroundSize: 'cover',
                                     backgroundPosition: 'center',
-                                    width: '100%',
-                                    height: '100%',
+                                    width: '270px',
+                                    height: '380px',
                                     fontSize:'20px',
-                                    color: '#000000'
+                                    color: '#000000',
+                                    margin:'10px',
                                 }
                             }>
-                                cardId: {card.id}
-                                title: {cardInfo.info.title} {cardInfo.info.power}
-                                description: {cardInfo.info.description}
-                                direction: {cardInfo.info.direction}
-                                <button onClick={() => selectCard(card.id)}>SELECT</button>
+                                <div style={{
+                                    margin:'20px',
+                                    display:'flex',
+                                    flexDirection:'column',
+                                    alignItems:'center',
+                                    justifyContent:'center'}}>
+                                <span style={{marginTop:"20px"}} >cardId: {card.id}</span>
+                                <span>title: {cardInfo.info.title} {cardInfo.info.power}</span>
+                                <span>description: {cardInfo.info.description}</span>
+                                <span>direction: {cardInfo.info.direction}</span>
+                                </div>
                             </div> : <></>)
                 }
 
-                )}
-            </div>
-            <div>
-                Selectbox
-                {selectedCards.map((card) => {
-                    const cardInfo = findCardById(card.id);
-                    return (
-                    cardInfo !== undefined ?
-                    <div style={
-                        {
-                            backgroundImage: `url("data:imageFpng;base64, ${cardInfo.background}")`,
-                            backgroundSize: 'cover',
-                            backgroundPosition: 'center',
-                            width: '100%',
-                            height: '100%',
-                        }
-                    }>
-                        cardId: {card.id} cardState: {card.state}
-                        title: {cardInfo.info.title} {cardInfo.info.power}
-                        description: {cardInfo.info.description}
-                        direction: {cardInfo.info.direction}
-                        <button onClick={() => selectCard(card.id)}>UNSELECT</button>
-                    </div>:<></>)
-                }
                 )}
             </div>
         </div>
