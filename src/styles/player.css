@@ -55,3 +55,22 @@
 .custom-scroll-player::-webkit-scrollbar-track {
     background-color: #ffffff;
 }
+
+
+.lobby-members-container-player{
+    background-color: #3b104fa7;
+    border: 1px solid #3b104fa7;
+    font-family: 'JetBrainsMono', sans-serif;
+    border-radius: 20px;
+    padding: 10px;
+    width: '100%';
+    max-width: 340px;
+    max-height: 620px;
+}
+
+.user-container-player {
+    max-height: 620px;
+    max-width: 300px;
+    overflow-x: clip;
+    overflow-clip-margin: 5px;
+}

@@ -89,11 +89,11 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                         <button className='start-host-button' style={{ width: '196px', height: '66px', fontSize: '40px', textAlign: 'center' }} onClick={() => StartGame()}>СТАРТ</button>
                     </div>
                     {props.lobby.lobbyMembers.length != 0 ?
-                        <div style={{ width: '100%', marginTop: '20px' }}>
-                            <div className='user-container-host' style={{ margin: '30px 48px' }}>
+                        <div style={{ width: '100%' }}>
+                            <div className='user-container-host' style={{ margin: '0px 48px' }}>
                                 {props.lobby.lobbyMembers ?
                                     props.lobby.lobbyMembers.map((item: LobbyMember) => (
-                                        <UserItem userData={props.userResourceData.dtos} item={item} style={{ marginTop: '10px' }} />
+                                        <UserItem userData={props.userResourceData.dtos} imageSize={60} item={item} style={{ marginTop: '5px', fontSize:'40px' }} />
                                     )) : <></>}
                             </div>
                         </div> : <></>}
