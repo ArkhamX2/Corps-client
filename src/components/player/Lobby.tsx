@@ -70,12 +70,12 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
             <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                 <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }} >
                     <div>
-                        <button className='start-button' style={{ fontSize: '25px', textAlign:'center', width: '300px', height: '70px' }} onClick={() => Ready()}>Готов</button>
+                        <button className='start-player-button' style={{ fontSize: '25px', textAlign:'center', width: '300px', height: '70px' }} onClick={() => Ready()}>Готов</button>
                     </div>
                 </div>
                 {props.lobby.lobbyMembers.length != 0 ?
-                    <div className="box" style={{margin:'20px' }}>
-                        <div className='custom-scroll' style={{ margin: '10px' }}>
+                    <div className="box-player" style={{margin:'20px' }}>
+                        <div className='custom-scroll-player' style={{ margin: '10px' }}>
                             {props.lobby.lobbyMembers ?
                                 props.lobby.lobbyMembers.map((item: LobbyMember) => (
                                     <UserItem userData={props.userResourceData.dtos} item={item} style={{ marginTop: '10px', width:'650px' }} />

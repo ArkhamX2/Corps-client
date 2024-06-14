@@ -156,13 +156,13 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                     <p>Загрузка карт...</p> :
 
                     <div style={divStyle}>
-                        <div className="container" style={{width:'100%'}}>
+                        <div className="container-player" style={{width:'100%'}}>
                             <img src={labelImage} alt="CORPS" style={{ margin: '10px', marginBottom: '40px' }}></img>
-                            <div className="box" style={{ width: '300px', marginTop: '20px' }}>
+                            <div className="box-player" style={{ width: '300px', marginTop: '20px' }}>
                                 <input style={{ border: 'none', outline: 'none', width: '100%' }} value={username} placeholder='Псевдоним' onChange={e => setUsername(e.target.value)} >
                                 </input>
                             </div>
-                            <div className="box" style={{ width: '300px', marginTop: '20px' }}>
+                            <div className="box-player" style={{ width: '300px', marginTop: '20px' }}>
                                 <input style={{ border: 'none', outline: 'none', width: '100%' }} value={lobbyCode} placeholder='Код игры' onChange={e => setLobbyCode(e.target.value)}>
                                 </input>
                             </div>
@@ -171,7 +171,7 @@ const Start: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                                 <img style={{ width: '70px', height: '70px' }} src={`data:image/png;base64, ${props.userResourceData.dtos[currentIndex].imageData}`} alt={`UserIcon ${currentIndex + 1}`} />
                                 <button onClick={showNextImage}>Далее</button>
                             </div>
-                            <button className='start-button' style={{ fontSize: '25px', marginTop: '40px', width: '300px', height: '70px' }} onClick={() => connectToHub()}>
+                            <button className='start-player-button' style={{ fontSize: '25px', marginTop: '40px', width: '300px', height: '70px' }} onClick={() => connectToHub()}>
                                 <span style={{ margin: '46px 22px' }}>Присоединиться</span>
                             </button>
 

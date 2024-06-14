@@ -1,10 +1,10 @@
-.container {
+.container-player {
     display: flex;
     flex-direction: column;
     align-items: center;
 }
 
-.box {
+.box-player {
     background-color: white;
     border: 1px solid #ffffff;
     font-family: 'JetBrainsMono', sans-serif;
@@ -15,14 +15,14 @@
     max-height: 600px;
 }
 
-.box-text {
+.box-player-text {
     font-family: 'JetBrainsMono', sans-serif;
     color: #242587;
     font-size: 40px;
     text-align: center;
 }
 
-.start-button {
+.start-player-button {
     font-family: 'Jura', sans-serif;
     color: #ffffff;
     text-shadow: 2px 2px 2px rgba(0, 0, 0, 0.7);
@@ -34,7 +34,7 @@
     border-radius: 20px;
 }
 
-.custom-scroll {
+.custom-scroll-player {
     max-height: 365px;
     max-width: 600px;
     overflow-y: auto;
@@ -43,15 +43,15 @@
     scrollbar-color: #242587 #ffffff;
 }
 
-.custom-scroll::-webkit-scrollbar {
+.custom-scroll-player::-webkit-scrollbar {
     width: 40px;
 }
 
-.custom-scroll::-webkit-scrollbar-thumb {
+.custom-scroll-player::-webkit-scrollbar-thumb {
     background-color: #ffffff;
     border-radius: 5px;
 }
 
-.custom-scroll::-webkit-scrollbar-track {
+.custom-scroll-player::-webkit-scrollbar-track {
     background-color: #ffffff;
 }

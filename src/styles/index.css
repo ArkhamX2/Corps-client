@@ -1,5 +1,6 @@
 @import url(./reset.css);
-@import url(./start_host.css);
+@import url(./host.css);
+@import url(./player.css);
 
 @font-face {
     font-family: 'Jura';

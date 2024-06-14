@@ -13,6 +13,7 @@ import readyImage from '../../resource/image/ready.png';
 import '../../styles/index.css'
 import { updateBackgroundResourceData } from '../../store/backgroundResourceSlice';
 import UserItem from '../UI/UserItem';
+import ghostImage from '../../resource/image/ghost-sign.png'
 const mapState = (state: RootState) => (
     {
         hubConnection: state.hubConnection.hubConnection,
@@ -71,28 +72,30 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
     return (
         <div style={divStyle}>
-            <img src={labelImage} alt="CORPS" style={{ margin: '10px', marginBottom:"60px" }}></img>
+            <img src={labelImage} alt="CORPS" style={{ margin: '10px', marginBottom: "60px" }}></img>
             <div style={{ display: 'flex', width: '100%', flexDirection: 'row', alignItems: 'center', justifyContent: 'space-evenly' }}>
                 <div>
-                    <img src={qrImage} alt="QR CODE" style={{ margin: '10px', width: '400px', height: '400px' }} />
+                    <div className="box-host" style={{ height: '100px', width: '404px', display: 'flex', alignItems: 'center', marginRight: '20px' }}>
+                        <span style={{ color: '#242587', fontSize: '45px', margin: '24px 48px' }}>КОД: {props.lobby.code.substring(0, 3)}-{props.lobby.code.substring(3)}</span>
+                    </div>
+                    <img src={qrImage} alt="QR CODE" style={{ marginTop: '45px', width: '404px', height: '404px' }} />
                 </div>
-                <div style={{ display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center'}}>
-                    <div style={{ display: 'flex', flexDirection: 'row', alignItems: 'center', justifyContent: 'center' }} >
-                        <div className="box" style={{height:'100px', display:'flex', alignItems:'center', marginRight:'20px'}}>
-                            <span style={{ color: '#242587', fontSize:'60px', margin:'24px 48px'}}>КОД: {props.lobby.code.substring(0,3)}-{props.lobby.code.substring(3)}</span>
-                        </div>
-                        <div>
-                            <button className='start-button' style={{width:'277px', height:'100px', fontSize:'60px', textAlign:'center'}} onClick={() => StartGame()}>СТАРТ</button>
-                        </div>
+                <div className='lobby-members-container-host' style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                    <div style={{width:'100%', display:'flex',flexDirection:'row', justifyContent:'space-between',alignItems:'center'}}>
+                        <div style={{display:'flex', margin:'0px 10px',flexDirection:'row', justifyContent:'center',alignItems:'center'}}>
+                            <img src={ghostImage} alt="ghost-sign" />
+                            <span>{props.lobby.lobbyMembers.filter(x=>x.isReady).length}/{props.lobby.lobbyMembers.length}</span>
+                            </div>
+                        <button className='start-host-button' style={{ width: '196px', height: '66px', fontSize: '40px', textAlign: 'center' }} onClick={() => StartGame()}>СТАРТ</button>
                     </div>
                     {props.lobby.lobbyMembers.length != 0 ?
-                        <div className="box" style={{ width:'100%', marginTop:'20px'}}>
-                            <div className='custom-scroll' style={{margin:'30px 48px'}}>
-                            {props.lobby.lobbyMembers ?
-                                props.lobby.lobbyMembers.map((item: LobbyMember) => (
-                                    <UserItem userData = {props.userResourceData.dtos} item = {item} style={{marginTop:'10px'}}/>
-                                )) : <></>}
-                                </div>
+                        <div style={{ width: '100%', marginTop: '20px' }}>
+                            <div className='user-container-host' style={{ margin: '30px 48px' }}>
+                                {props.lobby.lobbyMembers ?
+                                    props.lobby.lobbyMembers.map((item: LobbyMember) => (
+                                        <UserItem userData={props.userResourceData.dtos} item={item} style={{ marginTop: '10px' }} />
+                                    )) : <></>}
+                            </div>
                         </div> : <></>}
                 </div>
             </div>
