@@ -2,6 +2,8 @@ import { FC, useEffect, useRef, useState } from 'react'
 import { RootState } from '../../store'
 import { ConnectedProps, connect } from 'react-redux'
 import { CardState, GameCard } from '../../types/game'
+import UserItem from '../UI/UserItem'
+import { LobbyMember } from '../../types/lobby'
 
 type SelectedCard = {
     selectedCard: GameCard,
@@ -57,7 +59,7 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         backgroundPosition: 'center',
         width: '100%',
         height: '100vh',
-        fontSize:'40px',
+        fontSize: '40px',
         color: '#FFFFFF',
         display: 'flex',
         flexDirection: 'column',
@@ -66,45 +68,31 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     };
     return (
         <div style={divStyle}>
-            GameHost
-            <div>SelectedCards:
+            <div style={{display:'flex',flexDirection:'row'}}>
+                <div
+                    style={{
+                        backgroundImage: `url("data:image/png;base64, ${props.backgroundResourceData.board.imageData}")`,
+                        backgroundSize: "850px 480px",
+                        backgroundRepeat: 'no-repeat',
+                        backgroundPosition: 'center',
+                        width:  '850px',
+                        height:   '480px',
+                    }}
+                >
 
-                {props.lobby.lobbyMembers.map((player, i) =>
-                    <div>
-                        playerId: {i}
-                        {selectedCards.filter((card) => card.playerId === i).map((card) => {
-                            const cardInfo = props.cardResourceData.dtos.filter((x) => x.id == card.selectedCard.id)[0];
-                            return (<div style={
-                                {
-                                    backgroundImage: `url("data:imageFpng;base64, ${cardInfo.background}")`,
-                                    backgroundSize: 'cover',
-                                    backgroundPosition: 'center',
-                                    width: '100%',
-                                    height: '100%',
-                                }
-                            }>
-                                <div>
-                                    selectedCardId: {card.selectedCard.id} selectedCardState: {card.selectedCard.state}
-                                </div>
-                                cardId: {card.selectedCard.id}
-                                title: {cardInfo.info.title} {cardInfo.info.power}
-                                description: {cardInfo.info.description}
-                                direction: {cardInfo.info.direction}
-                            </div>)
-                        }
-                        )}
-                    </div>
+                </div>
+                <div>
+                    {props.lobby.lobbyMembers.length != 0 ?
+                        <div style={{ width: '100%' }}>
+                            <div className='user-container-host' style={{ margin: '0px 48px' }}>
+                                {props.lobby.lobbyMembers ?
+                                    props.lobby.lobbyMembers.map((item: LobbyMember) => (
+                                        <UserItem userData={props.userResourceData.dtos} imageSize={60} item={item} style={{ marginTop: '5px', fontSize: '40px' }} />
+                                    )) : <></>}
+                            </div>
+                        </div> : <></>}
+                </div>
 
-                )}
-                {props.lobby.lobbyMembers.map((player, i) =>
-                    <div>
-                        playerId: {i}
-                        {selectedCards.filter((card) => card.playerId === i).map((card) =>
-                            <div>
-                                selectedCardId: {card.selectedCard.id} selectedCardState: {card.selectedCard.state}
-                            </div>)}
-                    </div>
-                )}
             </div>
         </div>
     )
