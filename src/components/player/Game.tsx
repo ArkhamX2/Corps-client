@@ -4,6 +4,8 @@ import { ConnectedProps, connect } from 'react-redux'
 import { CardState, GameCard } from '../../types/game'
 import { useAppDispatch } from '../../utility/hook'
 import { CardDTO } from '../../types/cardDTO'
+import CardItem from '../UI/CardItem'
+import ghostImage from '../../resource/image/ghost-sign.png'
 const mapState = (state: RootState) => (
     {
         hubConnection: state.hubConnection.hubConnection,
@@ -52,7 +54,7 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     const selectCard = (selectedCardId: number) => {
         props.hubConnection?.invoke("SelectCard", props.lobby.id, props.player.id, selectedCardId).catch((err: any) => console.log(err))
     }
-    
+
     function findCardById(cardId: number): CardDTO | undefined {
         return props.cardResourceData.dtos.find(card => card.id === cardId);
     }
@@ -61,53 +63,58 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
         backgroundImage: `url("data:image/png;base64, ${props.backgroundResourceData.menu.imageData}")`,
         backgroundSize: 'cover',
         backgroundPosition: 'center',
+        position: 'relative',
         width: '100%',
         height: '100vh',
-        fontSize:'40px',
+        fontSize: '40px',
         color: '#FFFFFF',
-        display: 'flex',
-        flexDirection: 'column',
-        alignItems: 'center',
-        justifyContent: 'center',
     };
 
     return (
         <div style={divStyle}>
-            GamePlayer
-            <div style={{display:'flex',flexDirection:'row'}}>
-                Cardbox
-                {props.player.cards?.map((card) => {
-                    const cardInfo = findCardById(card.id);
-                    return (
+            <div style={{ position: 'absolute', width: '100%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
+                <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
+                    <div style={{ display: 'flex', margin:'14px', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
+                        <img src={ghostImage} alt="ghost-sign" />
+                        <span>{props.lobby.lobbyMembers.filter(x => x.isReady).length}/{props.lobby.lobbyMembers.length}</span>
+                    </div>
+                    <button className='start-player-button' style={{ margin:'14px', fontSize: '25px', textAlign: 'center', width: '95px', height: '50px' }} >Готов</button>
+                </div>
+            </div>
+            <div style={{
+                display: 'flex',
+                flexDirection: 'column',
+                height: '100%',
+                alignItems: 'center',
+                justifyContent: 'center',
+                zIndex: '1',
+            }}>
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
 
-                        cardInfo !== undefined ?
-                            <div onClick={() => selectCard(card.id)} style={
-                                {
-                                    backgroundImage: `url("data:imageFpng;base64, ${cardInfo.background}")`,
-                                    backgroundSize: 'cover',
-                                    backgroundPosition: 'center',
-                                    width: '270px',
-                                    height: '380px',
-                                    fontSize:'20px',
-                                    color: '#000000',
-                                    margin:'10px',
-                                }
-                            }>
-                                <div style={{
-                                    margin:'20px',
-                                    display:'flex',
-                                    flexDirection:'column',
-                                    alignItems:'center',
-                                    justifyContent:'center'}}>
-                                <span style={{marginTop:"20px"}} >cardId: {card.id}</span>
-                                <span>title: {cardInfo.info.title} {cardInfo.info.power}</span>
-                                <span>description: {cardInfo.info.description}</span>
-                                <span>direction: {cardInfo.info.direction}</span>
-                                </div>
-                            </div> : <></>)
-                }
+                    {selectedCards.map((card) => {
+                        const cardInfo = findCardById(card.id);
+                        return (
 
-                )}
+                            cardInfo !== undefined ?
+                                <CardItem card={cardInfo} onSelect={(id: number) => selectCard(id)} />
+                                : <></>)
+                    }
+
+                    )}
+                </div>
+                <div style={{ display: 'flex', flexDirection: 'row' }}>
+
+                    {props.player.cards?.filter(x => selectedCards.find(y => y.id === x.id) === undefined).map((card) => {
+                        const cardInfo = findCardById(card.id);
+                        return (
+
+                            cardInfo !== undefined ?
+
+                                <CardItem card={cardInfo} onSelect={(id: number) => selectCard(id)} /> : <></>)
+                    }
+
+                    )}
+                </div>
             </div>
         </div>
     )
