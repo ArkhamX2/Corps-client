@@ -7,6 +7,7 @@ export type LobbyMember  =  {
     username: string, 
     isReady: boolean,
     avatarId: number,
+    score?: number
 }
 export type LobbyType = {
     id: number,

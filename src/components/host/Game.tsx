@@ -4,10 +4,18 @@ import { ConnectedProps, connect } from 'react-redux'
 import { CardState, GameCard } from '../../types/game'
 import UserItem from '../UI/UserItem'
 import { LobbyMember } from '../../types/lobby'
+import { useAppDispatch } from '../../utility/hook'
+import { updateLobbyMemberData } from '../../store/lobbyDataSlice'
 
 type SelectedCard = {
     selectedCard: GameCard,
     playerId: number
+}
+
+type Player = {
+    id: number,
+    score: number,
+    isReady: boolean
 }
 
 const mapState = (state: RootState) => (
@@ -25,19 +33,21 @@ type PropsFromRedux = ConnectedProps<typeof connector>
 const connector = connect(mapState)
 
 const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
+    const dispatch = useAppDispatch()
     const hasPageBeenRendered = useRef({ effect1: false })
     const [selectedCards, setSelectedCards] = useState<SelectedCard[]>([]);
+    const [gameChangesShown, setGameChangesShown] = useState<boolean>(true);
     useEffect(() => {
         (() => {
             if (!hasPageBeenRendered.current["effect1"]) {
+                props.lobby.lobbyMembers.map((x) => {
+                    dispatch(updateLobbyMemberData({ ...x, isReady: false, score: 1 }))
+                })
                 props.hubConnection?.on("CardSelected", (playerId: number, CardsUpdate: GameCard[]) => {
-                    console.log(playerId);
-                    console.log(CardsUpdate);
                     CardsUpdate.map((card) => {
                         switch (card.state) {
                             case CardState.Unused:
                                 {
-                                    //selectedCards.find((s)=>s.playerId==playerId)?.selectedCards.find((c)=>c.id!=card.id)
                                     setSelectedCards(s => s.filter(c => c.selectedCard.id != card.id))
                                     break;
                                 }
@@ -49,10 +59,36 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                         }
                     })
                 })
+                props.hubConnection?.on("AllPlayerReady", (players: Player[]) => {
+                    console.log(players)
+                    players.map(player => {
+                        dispatch(updateLobbyMemberData({ ...props.lobby.lobbyMembers[player.id], isReady: player.isReady, score: player.score }))
+                    })
+                    setGameChangesShown(false)
+                })
+                props.hubConnection?.on("GamePlayerIsReady", (player: Player) => {
+                    dispatch(updateLobbyMemberData({ ...props.lobby.lobbyMembers[player.id], isReady: player.isReady, score: player.score }))
+                })
+                props.hubConnection?.on("GameChangesShown", (players: Player[]) => {
+                    console.log(players)
+                    players.map(player => {
+                        dispatch(updateLobbyMemberData({ ...props.lobby.lobbyMembers[player.id], isReady: player.isReady, score: player.score }))
+                    })
+                    setGameChangesShown(true)
+                })
+                props.hubConnection?.on("WinnerFound", (winner: number) => {
+                    console.log(winner)
+                })
             }
             hasPageBeenRendered.current["effect1"] = true
         })()
     }, []);
+    useEffect(() => {
+        if (!gameChangesShown) {
+            props.hubConnection?.invoke("GameChangesShown", props.lobby.id).then(() => {
+            }).catch(err => console.log(err))
+        }
+    }, [gameChangesShown])
     const divStyle: React.CSSProperties = {
         backgroundImage: `url("data:image/png;base64, ${props.backgroundResourceData.menu.imageData}")`,
         backgroundSize: 'cover',
@@ -68,18 +104,17 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     };
     return (
         <div style={divStyle}>
-            <div style={{display:'flex',flexDirection:'row'}}>
+            <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <div
                     style={{
                         backgroundImage: `url("data:image/png;base64, ${props.backgroundResourceData.board.imageData}")`,
                         backgroundSize: "850px 480px",
                         backgroundRepeat: 'no-repeat',
                         backgroundPosition: 'center',
-                        width:  '850px',
-                        height:   '480px',
+                        width: '850px',
+                        height: '480px',
                     }}
                 >
-
                 </div>
                 <div>
                     {props.lobby.lobbyMembers.length != 0 ?
@@ -87,7 +122,10 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                             <div className='user-container-host' style={{ margin: '0px 48px' }}>
                                 {props.lobby.lobbyMembers ?
                                     props.lobby.lobbyMembers.map((item: LobbyMember) => (
-                                        <UserItem userData={props.userResourceData.dtos} imageSize={60} item={item} style={{ marginTop: '5px', fontSize: '40px' }} />
+                                        <>
+                                            <UserItem userData={props.userResourceData.dtos} imageSize={60} item={item} style={{ marginTop: '5px', fontSize: '40px' }} />
+                                            <p>Score: {item.score}</p>
+                                        </>
                                     )) : <></>}
                             </div>
                         </div> : <></>}

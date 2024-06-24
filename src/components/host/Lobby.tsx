@@ -78,6 +78,9 @@ const Lobby: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                     <div className="box-host" style={{ height: '100px', width: '404px', display: 'flex', alignItems: 'center', marginRight: '20px' }}>
                         <span style={{ color: '#242587', fontSize: '45px', margin: '24px 48px' }}>КОД: {props.lobby.code.substring(0, 3)}-{props.lobby.code.substring(3)}</span>
                     </div>
+                    <div>
+                        <button onClick={() => navigator.clipboard.writeText(props.lobby.code)}>Copy</button>
+                    </div>
                     <img src={qrImage} alt="QR CODE" style={{ marginTop: '45px', width: '404px', height: '404px' }} />
                 </div>
                 <div className='lobby-members-container-host' style={{display: 'flex', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
