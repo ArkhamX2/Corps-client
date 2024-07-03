@@ -3,9 +3,12 @@ import { RootState } from '../../store'
 import { ConnectedProps, connect } from 'react-redux'
 import { CardState, GameCard } from '../../types/game'
 import UserItem from '../UI/UserItem'
+import { useNavigate } from 'react-router-dom';
+import Modal from 'react-modal';
 import { LobbyMember } from '../../types/lobby'
 import { useAppDispatch } from '../../utility/hook'
 import { updateLobbyMemberData } from '../../store/lobbyDataSlice'
+import { Navigate } from 'react-router-dom'
 
 type SelectedCard = {
     selectedCard: GameCard,
@@ -34,9 +37,26 @@ const connector = connect(mapState)
 
 const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     const dispatch = useAppDispatch()
+    const navigate = useNavigate()
     const hasPageBeenRendered = useRef({ effect1: false })
     const [selectedCards, setSelectedCards] = useState<SelectedCard[]>([]);
     const [gameChangesShown, setGameChangesShown] = useState<boolean>(true);
+    const [gameWinner, setWinner] = useState<number>(-1);
+    const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+
+    function openModal() {
+        setIsOpen(true);
+    }
+
+    function afterOpenModal() {
+
+    }
+
+    function closeModal() {
+        setIsOpen(false);
+        navigate('/lobbyHost');
+    }
+
     useEffect(() => {
         (() => {
             if (!hasPageBeenRendered.current["effect1"]) {
@@ -77,7 +97,8 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                     setGameChangesShown(true)
                 })
                 props.hubConnection?.on("WinnerFound", (winner: number) => {
-                    console.log(winner)
+                    setWinner(winner);
+                    openModal();
                 })
             }
             hasPageBeenRendered.current["effect1"] = true
@@ -104,6 +125,29 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     };
     return (
         <div style={divStyle}>
+            <Modal
+                isOpen={modalIsOpen}
+                onAfterOpen={afterOpenModal}
+                onRequestClose={closeModal}
+                contentLabel="Example Modal"
+                ariaHideApp={false}
+            >
+                {props.lobby.lobbyMembers.length != 0 ?
+                    <div style={{ width: '100%' }}>
+                        <div className='user-container-host' style={{ margin: '0px 48px' }}>
+                            {props.lobby.lobbyMembers ?
+                                props.lobby.lobbyMembers.map((item: LobbyMember) => (
+                                    <>
+                                        <UserItem userData={props.userResourceData.dtos} imageSize={60} item={item} style={{ marginTop: '5px', fontSize: '40px' }} />
+                                        <p>Score: {item.score}</p>
+                                        {gameWinner == item.id ?
+                                            <p>Победитель</p> : <></>
+                                        }
+                                    </>
+                                )) : <></>}
+                        </div>
+                    </div> : <></>}
+            </Modal>
             <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <div
                     style={{

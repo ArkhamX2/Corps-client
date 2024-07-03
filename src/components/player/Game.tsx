@@ -3,8 +3,12 @@ import { RootState } from '../../store'
 import { ConnectedProps, connect } from 'react-redux'
 import { CardState, GameCard } from '../../types/game'
 import { useAppDispatch } from '../../utility/hook'
+import UserItem from '../UI/UserItem'
 import { CardDTO } from '../../types/cardDTO'
+import { useNavigate } from 'react-router-dom';
+import { LobbyMember } from '../../types/lobby'
 import CardItem from '../UI/CardItem'
+import Modal from 'react-modal';
 import ghostImage from '../../resource/image/ghost-sign.png'
 import { updatePlayerData } from '../../store/playerDataSlice'
 const mapState = (state: RootState) => (
@@ -26,9 +30,26 @@ const connector = connect(mapState)
 
 const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     const dispatch = useAppDispatch()
+    const navigate = useNavigate()
     const [selectedCards, setSelectedCards] = useState<GameCard[]>([]);
     const hasPageBeenRendered = useRef({ effect1: false })
+    const [gameWinner, setWinner] = useState<number>(-1);
     const [gameChangesShown, setGameChangesShown] = useState<boolean>(true);
+    const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+
+    function openModal() {
+        setIsOpen(true);
+    }
+
+    function afterOpenModal() {
+
+    }
+
+    function closeModal() {
+        setIsOpen(false);
+        navigate('/lobbyHost');
+    }
+
     useEffect(() => {
         (() => {
             if (!hasPageBeenRendered.current["effect1"]) {
@@ -96,6 +117,29 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
     return (
         <div style={divStyle}>
+            <Modal
+                isOpen={modalIsOpen}
+                onAfterOpen={afterOpenModal}
+                onRequestClose={closeModal}
+                contentLabel="Example Modal"
+                ariaHideApp={false}
+            >
+                {props.lobby.lobbyMembers.length != 0 ?
+                    <div style={{ width: '100%' }}>
+                        <div className='user-container-host' style={{ margin: '0px 48px' }}>
+                            {props.lobby.lobbyMembers ?
+                                props.lobby.lobbyMembers.map((item: LobbyMember) => (
+                                    <>
+                                        <UserItem userData={props.userResourceData.dtos} imageSize={60} item={item} style={{ marginTop: '5px', fontSize: '40px' }} />
+                                        <p>Score: {item.score}</p>
+                                        {gameWinner == item.id ?
+                                            <p>Победитель</p> : <></>
+                                        }
+                                    </>
+                                )) : <></>}
+                        </div>
+                    </div> : <></>}
+            </Modal>
             <div style={{ position: 'absolute', width: '100%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                 <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', margin: '14px', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
