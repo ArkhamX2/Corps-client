@@ -36,6 +36,7 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
     const [gameWinner, setWinner] = useState<number>(-1);
     const [gameChangesShown, setGameChangesShown] = useState<boolean>(true);
     const [modalIsOpen, setIsOpen] = useState<boolean>(false);
+    const [localReady, setLocalReady] = useState<boolean>(false);
 
     function openModal() {
         setIsOpen(true);
@@ -47,7 +48,7 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
     function closeModal() {
         setIsOpen(false);
-        navigate('/lobbyHost');
+        navigate('/lobbyPlayer');
     }
 
     useEffect(() => {
@@ -70,14 +71,15 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                                 }
                         }
                     })
-                    //dispatch(updatePlayerData({ ...props.player, cards: tmp }));
                 })
                 props.hubConnection?.on("AllPlayerReady", () => {
-                    console.log("AllPlayerReady")
+                    console.log("AllPlayerReady")                    
                     setGameChangesShown(false)
                 })
-                props.hubConnection?.on("WinnerFound", () => {
+                props.hubConnection?.on("WinnerFound", (winner: number) => {
                     console.log("WinnerFound")
+                    setWinner(winner - 1)
+                    openModal()
                 })
                 props.hubConnection?.on("GameChangesShown" + props.player.id, (playerHand: GameCard[]) => {
                     console.log("GameChangesShown")
@@ -90,6 +92,11 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
             hasPageBeenRendered.current["effect1"] = true
         })()
     }, []);
+
+    useEffect(() => {
+        setLocalReady(false)
+    }, [gameChangesShown])
+
     const selectCard = (selectedCardId: number) => {
         console.log(selectedCardId)
         props.hubConnection?.invoke("SelectCard", props.lobby.id, props.player.id, selectedCardId).catch((err: any) => console.log(err))
@@ -101,7 +108,7 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
 
     const Ready = () => {
         if (props.hubConnection)
-            props.hubConnection.invoke("PlayerReady", props.lobby.id, props.player.id).catch((err: any) => console.log(err))
+            props.hubConnection.invoke("PlayerReady", props.lobby.id, props.player.id).catch((err: any) => console.log(err)).finally(() => { setLocalReady(!localReady) })
     }
 
     const divStyle: React.CSSProperties = {
@@ -124,27 +131,21 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                 contentLabel="Example Modal"
                 ariaHideApp={false}
             >
-                {props.lobby.lobbyMembers.length != 0 ?
-                    <div style={{ width: '100%' }}>
-                        <div className='user-container-host' style={{ margin: '0px 48px' }}>
-                            {props.lobby.lobbyMembers ?
-                                props.lobby.lobbyMembers.map((item: LobbyMember) => (
-                                    <>
-                                        <UserItem userData={props.userResourceData.dtos} imageSize={60} item={item} style={{ marginTop: '5px', fontSize: '40px' }} />
-                                        <p>Score: {item.score}</p>
-                                        {gameWinner == item.id ?
-                                            <p>Победитель</p> : <></>
-                                        }
-                                    </>
-                                )) : <></>}
-                        </div>
-                    </div> : <></>}
+                {gameWinner == props.player.id ?
+                    <>
+                        <p>Вы победили!</p>
+                    </>
+                    :
+                    <>
+                        <p>Вы проиграли. :(</p>
+                    </>}
+                <button onClick={() => closeModal()}>Вернуться в лобби</button>
             </Modal>
             <div style={{ position: 'absolute', width: '100%', flexDirection: 'column', alignItems: 'center', justifyContent: 'center' }}>
                 <div style={{ display: 'flex', flexDirection: 'row', justifyContent: 'space-between' }}>
                     <div style={{ display: 'flex', margin: '14px', flexDirection: 'row', justifyContent: 'center', alignItems: 'center' }}>
                         <img src={ghostImage} alt="ghost-sign" />
-                        <span>{props.lobby.lobbyMembers.filter(x => x.isReady).length}/{props.lobby.lobbyMembers.length}</span>
+                        <p>Ваше имя: {props.player.name}</p>
                     </div>
                     <button className='start-player-button' style={{ margin: '14px', fontSize: '25px', textAlign: 'center', width: '95px', height: '50px' }} onClick={() => Ready()}>Готов</button>
                 </div>
@@ -157,15 +158,14 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                 justifyContent: 'center',
                 zIndex: '1',
             }}>
-                <div>
-                    <button onClick={()=>console.log(props.player.cards)}>TEST</button>
-                </div>
                 <div style={{ display: 'flex', flexDirection: 'row' }}>
                     {selectedCards.map((card) => {
                         const cardInfo = findCardById(card.id);
                         return (
                             cardInfo !== undefined ?
-                                <CardItem card={cardInfo} onSelect={(id: number) => selectCard(id)} />
+                                <div style={{ filter: localReady ? "grayscale(100%)" : "grayscale(0%)" }}>
+                                    <CardItem card={cardInfo} onSelect={(id: number) => selectCard(id)} />
+                                </div>
                                 : <></>)
                     }
                     )}

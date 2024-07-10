@@ -97,7 +97,8 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                     setGameChangesShown(true)
                 })
                 props.hubConnection?.on("WinnerFound", (winner: number) => {
-                    setWinner(winner);
+                    setWinner(winner-1);
+                    console.log(winner)
                     openModal();
                 })
             }
@@ -139,14 +140,16 @@ const Game: FC<PropsFromRedux> = (props: PropsFromRedux) => {
                                 props.lobby.lobbyMembers.map((item: LobbyMember) => (
                                     <>
                                         <UserItem userData={props.userResourceData.dtos} imageSize={60} item={item} style={{ marginTop: '5px', fontSize: '40px' }} />
+                                        <p>{item.username}</p>
                                         <p>Score: {item.score}</p>
                                         {gameWinner == item.id ?
-                                            <p>Победитель</p> : <></>
+                                            <p>победитель!</p> : <></>
                                         }
                                     </>
                                 )) : <></>}
                         </div>
                     </div> : <></>}
+                <button onClick={()=>closeModal()}>Вернуться в лобби</button>
             </Modal>
             <div style={{ display: 'flex', flexDirection: 'row' }}>
                 <div
